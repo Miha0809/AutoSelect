@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AutoSelect.API.Controllers;
 
+/// <inheritdoc />
 [ApiController]
 [Route("[controller]")]
 public class WeatherForecastController : ControllerBase
@@ -13,11 +14,19 @@ public class WeatherForecastController : ControllerBase
 
     private readonly ILogger<WeatherForecastController> _logger;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="logger"></param>
     public WeatherForecastController(ILogger<WeatherForecastController> logger)
     {
         _logger = logger;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     [HttpGet(Name = "GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()
     {

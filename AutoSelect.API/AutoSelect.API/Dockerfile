@@ -6,6 +6,7 @@ EXPOSE 8081
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
+ENV ASPNETCORE_ENVIRONMENT=${BUILD_CONFIGURATION}
 WORKDIR /src
 COPY ["AutoSelect.API.csproj", "."]
 RUN dotnet restore "AutoSelect.API.csproj"
@@ -15,9 +16,11 @@ RUN dotnet build "AutoSelect.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
+ENV ASPNETCORE_ENVIRONMENT=${BUILD_CONFIGURATION}
 RUN dotnet publish "AutoSelect.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
+ENV ASPNETCORE_ENVIRONMENT=${BUILD_CONFIGURATION}
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "AutoSelect.API.dll"]
