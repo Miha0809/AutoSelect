@@ -5,6 +5,7 @@ Migrations/
 
 .idea/
 
-
 AutoSelect.API/bin/
 AutoSelect.API/obj/
+
+AutoSelect.API/.env
