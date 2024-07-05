@@ -5,6 +5,7 @@ using AutoSelect.API.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Sport.API.Profiles;
 using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -61,6 +62,7 @@ builder
     })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AutoSelectDbContext>();
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 // DI for repositories
 
