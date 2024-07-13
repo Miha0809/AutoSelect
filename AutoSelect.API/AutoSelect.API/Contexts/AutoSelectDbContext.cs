@@ -8,4 +8,11 @@ using Models;
 /// Контекст бази данних.
 /// </summary>
 public class AutoSelectDbContext(DbContextOptions<AutoSelectDbContext> options)
-    : IdentityDbContext<User>(options) { }
+    : IdentityDbContext<User>(options)
+{
+    /// <inheritdoc />
+    public required DbSet<Expert> Experts { get; set; }
+
+    /// <inheritdoc />
+    public required DbSet<Client>? Clients { get; set; }
+}
