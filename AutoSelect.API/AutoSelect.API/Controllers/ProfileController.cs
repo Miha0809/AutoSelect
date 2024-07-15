@@ -18,16 +18,18 @@ namespace AutoSelect.API.Controllers;
 public class ProfileController(IProfileService service, IMapper mapper) : Controller
 {
     /// <summary>
-    /// Редагування данних користувача.
+    /// Редагування данних користувача після першої атворизації.
     /// </summary>
     /// <param name="updateProfileDto">Оновлені дані користувача.</param>
-    [HttpPatch]
-    public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDto updateProfileDto)
+    [HttpPatch("after-login")]
+    public async Task<IActionResult> UpdateProfile(
+        [FromBody] UpdateProfileAfterFirstLoginDto updateProfileDto
+    )
     {
         try
         {
             var email = User.Identity!.Name!;
-            var updatedUser = await service.UpdateAsync(updateProfileDto, email);
+            var updatedUser = await service.UpdateAfterFirstLoginAsync(updateProfileDto, email);
 
             return Ok(mapper.Map<UserPrivateShowDto>(updatedUser));
         }
@@ -48,7 +50,7 @@ public class ProfileController(IProfileService service, IMapper mapper) : Contro
             var email = User.Identity!.Name!;
             var user = await service.ProfileAsync(email);
 
-            return Ok(user);
+            return Ok(mapper.Map<UserPrivateShowDto>(user));
         }
         catch (System.Exception)
         {

@@ -3,7 +3,7 @@ namespace AutoSelect.API.Models.DTOs.Requests;
 /// <summary>
 /// DTO редагування профілю користувача.
 /// </summary>
-public class UpdateProfileDto
+public class UpdateProfileAfterFirstLoginDto
 {
     /// <summary>
     /// Ім'я.

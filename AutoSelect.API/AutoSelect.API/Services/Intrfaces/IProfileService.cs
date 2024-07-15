@@ -19,7 +19,10 @@ public interface IProfileService
     /// </summary>
     /// <param name="updateProfileDto">Оновленні дані.</param>
     /// <param name="email">Електронна пошта користувача.</param>
-    Task<User?> UpdateAsync(UpdateProfileDto updateProfileDto, string email);
+    Task<User?> UpdateAfterFirstLoginAsync(
+        UpdateProfileAfterFirstLoginDto updateProfileDto,
+        string email
+    );
 
     /// <summary>
     /// Видалити профіль.

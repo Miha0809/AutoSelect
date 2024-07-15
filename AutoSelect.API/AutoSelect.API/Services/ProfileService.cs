@@ -41,15 +41,18 @@ public class ProfileService(
     }
 
     /// <summary>
-    /// Редагування профілю користувача.
+    /// Редагування профілю користувача після першої авторизації.
     /// </summary>
     /// <param name="updateProfileDto">Оновленні дані.</param>
     /// <param name="email">Електронна пошта користувача.</param>
-    async Task<User?> IProfileService.UpdateAsync(UpdateProfileDto updateProfileDto, string email)
+    async Task<User?> IProfileService.UpdateAfterFirstLoginAsync(
+        UpdateProfileAfterFirstLoginDto updateProfileDto,
+        string email
+    )
     {
         var user = await userSearchRepository.GetUserByEmailAsync(email);
 
-        if (user is not null)
+        if (user is not null && user.FirstName is null && user.LastName is null)
         {
             user!.FirstName ??= updateProfileDto.FirstName;
             user!.LastName ??= updateProfileDto.LastName;

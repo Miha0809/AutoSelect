@@ -15,7 +15,7 @@ public class AutoMapperProfile : Profile
     /// </summary>
     public AutoMapperProfile()
     {
-        CreateMap<User, UpdateProfileDto>().ReverseMap();
+        CreateMap<User, UpdateProfileAfterFirstLoginDto>().ReverseMap();
         CreateMap<User, UserPublicShowDto>();
         CreateMap<User, UserPrivateShowDto>();
     }
