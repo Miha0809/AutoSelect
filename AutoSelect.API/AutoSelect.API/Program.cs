@@ -1,14 +1,17 @@
 using System.Reflection;
-using System.Text.Json.Serialization;
 using AutoSelect.API.Contexts;
+using AutoSelect.API.HealthChecks;
 using AutoSelect.API.Models;
 using AutoSelect.API.Models.Enums;
 using AutoSelect.API.Repositpries;
 using AutoSelect.API.Repositpries.Interfaces;
 using AutoSelect.API.Services;
 using AutoSelect.API.Services.Interfaces;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using Sport.API.Profiles;
 using Swashbuckle.AspNetCore.Filters;
@@ -29,7 +32,7 @@ builder.Services.AddSwaggerGen(options =>
         {
             In = ParameterLocation.Header,
             Name = "Authorization",
-            Type = SecuritySchemeType.ApiKey
+            Type = SecuritySchemeType.ApiKey,
         }
     );
     options.OperationFilter<SecurityRequirementsOperationFilter>();
@@ -39,7 +42,7 @@ builder.Services.AddSwaggerGen(options =>
         {
             Title = "AutoSelect",
             Version = "v1",
-            Description = "Description"
+            Description = "Description",
         }
     );
 
@@ -49,9 +52,10 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(xmlPath);
 });
 builder.Services.AddControllers();
+string connectionString = builder.Configuration.GetConnectionString("Host")!;
 builder.Services.AddDbContext<AutoSelectDbContext>(options =>
 {
-    options.UseLazyLoadingProxies().UseNpgsql(builder.Configuration.GetConnectionString("Host")); // Host (tigibim364@luravel.com !tigibim364@luravel.com!Q) Localhost
+    options.UseLazyLoadingProxies().UseNpgsql(connectionString);
 });
 builder
     .Services.AddIdentityApiEndpoints<User>(options =>
@@ -70,6 +74,20 @@ builder.Services.AddScoped<IUserSearchRepository, UserSearchRepository>();
 // DI for services
 builder.Services.AddScoped<IProfileService, ProfileService>();
 
+// Health Checks
+builder
+    .Services.AddHealthChecks()
+    .AddCheck<TestHealthCheack>(nameof(TestHealthCheack))
+    .AddNpgSql(
+        connectionString: connectionString,
+        healthQuery: "SELECT 1",
+        name: "NpgSql Check",
+        failureStatus: HealthStatus.Unhealthy,
+        tags: new[] { "sql" }
+    );
+
+builder.Services.AddHealthChecksUI().AddInMemoryStorage();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -82,14 +100,24 @@ if (app.Environment.IsDevelopment())
 app.MapIdentityApi<User>();
 app.UseHttpsRedirection();
 
+app.MapHealthChecks(
+    "/health",
+    new HealthCheckOptions
+    {
+        Predicate = _ => true,
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+    }
+);
+
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHealthChecksUI();
 
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var roles = new[] { nameof(Roles.Client), nameof(Roles.Expert), };
+    var roles = new[] { nameof(Roles.Client), nameof(Roles.Expert) };
 
     foreach (var role in roles)
     {
