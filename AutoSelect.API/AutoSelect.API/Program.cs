@@ -77,7 +77,6 @@ builder.Services.AddScoped<IProfileService, ProfileService>();
 // Health Checks
 builder
     .Services.AddHealthChecks()
-    .AddCheck<TestHealthCheack>(nameof(TestHealthCheack))
     .AddNpgSql(
         connectionString: connectionString,
         healthQuery: "SELECT 1",
