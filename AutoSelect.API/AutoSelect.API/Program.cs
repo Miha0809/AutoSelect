@@ -1,6 +1,5 @@
 using System.Reflection;
 using AutoSelect.API.Contexts;
-using AutoSelect.API.HealthChecks;
 using AutoSelect.API.Models;
 using AutoSelect.API.Models.Enums;
 using AutoSelect.API.Repositpries;
