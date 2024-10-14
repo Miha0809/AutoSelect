@@ -1,9 +1,9 @@
-namespace AutoSelect.API.Models.DTOs.Responses;
+namespace AutoSelect.API.Models.DTOs.Responses.Expert;
 
 /// <summary>
-/// DTO для приватної інформації про користувача.
+/// DTO для приватної інформації про експерта.
 /// </summary>
-public class UserPrivateShowDto
+public class ExpertPrivateShowDto
 {
   /// <summary>
   /// Електронна пошта користувача.

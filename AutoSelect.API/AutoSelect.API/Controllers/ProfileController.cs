@@ -1,14 +1,12 @@
 using AutoMapper;
 using AutoSelect.API.Models.DTOs.Requests;
-using AutoSelect.API.Models.DTOs.Responses;
+using AutoSelect.API.Models.DTOs.Responses.Expert;
 using AutoSelect.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AutoSelect.API.Controllers;
-
 /// <summary>
-/// Контроллер профілю користувача.
+/// Контроллер профілю для всіх користувачів.
 /// </summary>
 /// <param name="service">Сервіс профілю користувача.</param>
 /// <param name="mapper">Маппер об'єктів.</param>
@@ -21,7 +19,7 @@ public class ProfileController(IProfileService service, IMapper mapper) : Contro
     /// Редагування данних користувача після першої атворизації.
     /// </summary>
     /// <param name="updateProfileDto">Оновлені дані користувача.</param>
-    [HttpPatch("after-login")]
+    [HttpPatch]
     public async Task<IActionResult> UpdateProfile(
         [FromBody] UpdateProfileAfterFirstLoginDto updateProfileDto
     )
@@ -31,7 +29,7 @@ public class ProfileController(IProfileService service, IMapper mapper) : Contro
             var email = User.Identity!.Name!;
             var updatedUser = await service.UpdateAfterFirstLoginAsync(updateProfileDto, email);
 
-            return Ok(mapper.Map<UserPrivateShowDto>(updatedUser));
+            return Ok(mapper.Map<ExpertPrivateShowDto>(updatedUser));
         }
         catch (System.Exception)
         {
@@ -40,17 +38,37 @@ public class ProfileController(IProfileService service, IMapper mapper) : Contro
     }
 
     /// <summary>
-    /// Профіль користувача.
+    /// Вийти з акаунта.
     /// </summary>
-    [HttpGet]
-    public async Task<IActionResult> Profile()
+    [HttpDelete("logout")]
+    public IActionResult Logout()
+    {
+        try
+        {
+            HttpContext.Response.Cookies.Delete(".AspNetCore.Identity.Application");
+
+            return Ok(StatusCodes.Status200OK);
+        }
+        catch (System.Exception)
+        {
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Видалення акаунта.
+    /// </summary>
+    [HttpDelete]
+    public async Task<IActionResult> Delete()
     {
         try
         {
             var email = User.Identity!.Name!;
-            var user = await service.ProfileAsync(email);
+            var isdeleteduser = await service.DeleteAsync(email);
 
-            return Ok(mapper.Map<UserPrivateShowDto>(user));
+            HttpContext.Response.Cookies.Delete(".AspNetCore.Identity.Application");
+
+            return Ok(isdeleteduser);
         }
         catch (System.Exception)
         {

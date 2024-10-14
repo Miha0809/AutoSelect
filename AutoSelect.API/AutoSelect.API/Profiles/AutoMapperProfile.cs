@@ -3,7 +3,7 @@ namespace Sport.API.Profiles;
 using AutoMapper;
 using AutoSelect.API.Models;
 using AutoSelect.API.Models.DTOs.Requests;
-using AutoSelect.API.Models.DTOs.Responses;
+using AutoSelect.API.Models.DTOs.Responses.Expert;
 
 /// <summary>
 /// Профіль маппера об'єктів.
@@ -16,7 +16,7 @@ public class AutoMapperProfile : Profile
     public AutoMapperProfile()
     {
         CreateMap<User, UpdateProfileAfterFirstLoginDto>().ReverseMap();
-        CreateMap<User, UserPublicShowDto>();
-        CreateMap<User, UserPrivateShowDto>();
+        CreateMap<User, ExpertPublicShowDto>();
+        CreateMap<User, ExpertPrivateShowDto>();
     }
 }

@@ -2,6 +2,7 @@ using System.Reflection;
 using AutoSelect.API.Contexts;
 using AutoSelect.API.Models;
 using AutoSelect.API.Models.Enums;
+using AutoSelect.API.Repositories;
 using AutoSelect.API.Repositpries;
 using AutoSelect.API.Repositpries.Interfaces;
 using AutoSelect.API.Services;

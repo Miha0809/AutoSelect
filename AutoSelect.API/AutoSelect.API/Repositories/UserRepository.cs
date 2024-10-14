@@ -2,7 +2,7 @@ using AutoSelect.API.Contexts;
 using AutoSelect.API.Models;
 using AutoSelect.API.Repositpries.Interfaces;
 
-namespace AutoSelect.API.Repositpries;
+namespace AutoSelect.API.Repositories;
 
 /// <summary>
 /// Репозіторій для користувача.

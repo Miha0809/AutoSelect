@@ -26,8 +26,18 @@ public class ProfileService(
     async Task<bool> IProfileService.DeleteAsync(string email)
     {
         var user = await userSearchRepository.GetUserByEmailAsync(email);
+
+        if (user is null)
+        {
+            throw new ArgumentNullException(nameof(user), "User is null");
+        }
+
         userRepository.Remove(user!);
-        return userSearchRepository.GetUserByEmailAsync(email) is null;
+        userRepository.Save();
+
+        var isExistsUser = await userSearchRepository.GetUserByEmailAsync(email) is null;
+
+        return isExistsUser;
     }
 
     /// <summary>
@@ -74,6 +84,6 @@ public class ProfileService(
             return user;
         }
 
-        return null;
+        throw new ArgumentException(nameof(user), "User is changed");
     }
 }
