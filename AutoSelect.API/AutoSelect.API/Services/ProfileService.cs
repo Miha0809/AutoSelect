@@ -1,6 +1,7 @@
 using AutoSelect.API.Models;
 using AutoSelect.API.Models.DTOs.Requests;
 using AutoSelect.API.Models.Enums;
+using AutoSelect.API.Repositories.Interfaces;
 using AutoSelect.API.Repositpries.Interfaces;
 using AutoSelect.API.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -20,12 +21,48 @@ public class ProfileService(
 ) : IProfileService
 {
     /// <summary>
+    /// Профіль користувача.
+    /// </summary>
+    /// <param name="email">Електронна пошта користувача.</param>
+    async Task<TUser> IProfileService.ProfileAsync<TUser>(string email)
+    {
+        var user = await userSearchRepository.GetUserByEmailAsync<TUser>(email);
+        return user!;
+    }
+
+    /// <summary>
+    /// TODO: name
+    /// </summary>
+    /// <param name="userUpdate"></param>
+    /// <param name="email"></param>
+    /// <typeparam name="TUser"></typeparam>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    async Task<TUser> IProfileService.UpdateAsync<TUser>(TUser userUpdate, string email)
+    {
+        var user = await userSearchRepository.GetUserByEmailAsync<TUser>(email);
+        
+        if (user is null)
+        {
+            throw new ArgumentNullException(nameof(user), "User is null");
+        }
+
+        user = userUpdate;
+        
+        userRepository.Update<TUser>(user);
+        userRepository.Save();
+
+        return (await userSearchRepository.GetUserByEmailAsync<TUser>(email))!;
+    }
+
+
+    /// <summary>
     /// Видалити профіль.
     /// </summary>
     /// <param name="email">Електронна пошта користувача.</param>
-    async Task<bool> IProfileService.DeleteAsync(string email)
+    async Task<bool> IProfileService.DeleteAsync<TUser>(string email)
     {
-        var user = await userSearchRepository.GetUserByEmailAsync(email);
+        var user = await userSearchRepository.GetUserByEmailAsync<TUser>(email);
 
         if (user is null)
         {
@@ -35,19 +72,9 @@ public class ProfileService(
         userRepository.Remove(user!);
         userRepository.Save();
 
-        var isExistsUser = await userSearchRepository.GetUserByEmailAsync(email) is null;
+        var isExistsUser = await userSearchRepository.GetUserByEmailAsync<TUser>(email) is null;
 
         return isExistsUser;
-    }
-
-    /// <summary>
-    /// Профіль користувача.
-    /// </summary>
-    /// <param name="email">Електронна пошта користувача.</param>
-    async Task<User> IProfileService.ProfileAsync(string email)
-    {
-        var user = await userSearchRepository.GetUserByEmailAsync(email);
-        return user!;
     }
 
     /// <summary>
@@ -55,12 +82,12 @@ public class ProfileService(
     /// </summary>
     /// <param name="updateProfileDto">Оновленні дані.</param>
     /// <param name="email">Електронна пошта користувача.</param>
-    async Task<User?> IProfileService.UpdateAfterFirstLoginAsync(
+    async Task<TUser?> IProfileService.UpdateAfterFirstLoginAsync<TUser>(
         UpdateProfileAfterFirstLoginDto updateProfileDto,
         string email
-    )
+    ) where TUser : class
     {
-        var user = await userSearchRepository.GetUserByEmailAsync(email);
+        var user = await userSearchRepository.GetUserByEmailAsync<TUser>(email);
 
         if (user is not null && user.FirstName is null && user.LastName is null)
         {
@@ -72,13 +99,29 @@ public class ProfileService(
             if (userRoles.Count == 0 && updateProfileDto.IsExpert)
             {
                 await userManager.AddToRoleAsync(user, nameof(Roles.Expert));
+
+                var expert = new Expert
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName
+                };
+                userRepository.Add(expert);
             }
             else if (userRoles.Count == 0 && !updateProfileDto.IsExpert)
             {
                 await userManager.AddToRoleAsync(user, nameof(Roles.Client));
+
+                var client = new Client
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName
+                };
+                userRepository.Add(client);
             }
 
-            userRepository.Update(user!);
+            // userRepository.Update(user);
             userRepository.Save();
 
             return user;

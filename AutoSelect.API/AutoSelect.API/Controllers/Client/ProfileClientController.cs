@@ -1,20 +1,20 @@
 using AutoMapper;
-using AutoSelect.API.Models.DTOs.Responses.Expert;
+using AutoSelect.API.Models.DTOs.Responses.Client;
 using AutoSelect.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AutoSelect.API.Controllers;
+namespace AutoSelect.API.Controllers.Client;
 
 /// <summary>
-/// Контроллер профілю експерта.
+/// Контроллер профілю клієнта.
 /// </summary>
 /// <param name="service">Сервіс профілю користувача.</param>
 /// <param name="mapper">Маппер об'єктів.</param>
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class ProfileExpertController(IProfileService service, IMapper mapper) : Controller
+public class ProfileClientController(IProfileService service, IMapper mapper) : Controller
 {
     /// <summary>
     /// Профіль користувача.
@@ -25,9 +25,9 @@ public class ProfileExpertController(IProfileService service, IMapper mapper) : 
         try
         {
             var email = User.Identity!.Name!;
-            var user = await service.ProfileAsync(email);
+            var user = await service.ProfileAsync<Models.Client>(email);
 
-            return Ok(mapper.Map<ExpertPrivateShowDto>(user));
+            return Ok(mapper.Map<ClientPrivateShowDto>(user));
         }
         catch (System.Exception)
         {

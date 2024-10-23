@@ -8,16 +8,22 @@ namespace AutoSelect.API.Repositpries.Interfaces;
 public interface IUserRepository
 {
     /// <summary>
+    /// Добавлення.
+    /// </summary>
+    /// <param name="user">Користувач.</param>
+    void Add<TUser>(TUser user) where TUser : User;
+    
+    /// <summary>
     /// Оновлення.
     /// </summary>
     /// <param name="user">Користувач.</param>
-    void Update(User user);
+    void Update<TUser>(TUser user) where TUser : User;
 
     /// <summary>
     /// Видалення.
     /// </summary>
     /// <param name="user">Користувач.</param>
-    void Remove(User user);
+    void Remove<TUser>(TUser user) where TUser : User;
 
     /// <summary>
     /// Збереження змін.

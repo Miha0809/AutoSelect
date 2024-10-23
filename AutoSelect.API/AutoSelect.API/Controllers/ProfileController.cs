@@ -1,4 +1,5 @@
 using AutoMapper;
+using AutoSelect.API.Models;
 using AutoSelect.API.Models.DTOs.Requests;
 using AutoSelect.API.Models.DTOs.Responses.Expert;
 using AutoSelect.API.Services.Interfaces;
@@ -27,7 +28,7 @@ public class ProfileController(IProfileService service, IMapper mapper) : Contro
         try
         {
             var email = User.Identity!.Name!;
-            var updatedUser = await service.UpdateAfterFirstLoginAsync(updateProfileDto, email);
+            var updatedUser = await service.UpdateAfterFirstLoginAsync<User>(updateProfileDto, email);
 
             return Ok(mapper.Map<ExpertPrivateShowDto>(updatedUser));
         }
@@ -64,7 +65,7 @@ public class ProfileController(IProfileService service, IMapper mapper) : Contro
         try
         {
             var email = User.Identity!.Name!;
-            var isdeleteduser = await service.DeleteAsync(email);
+            var isdeleteduser = await service.DeleteAsync<User>(email);
 
             HttpContext.Response.Cookies.Delete(".AspNetCore.Identity.Application");
 

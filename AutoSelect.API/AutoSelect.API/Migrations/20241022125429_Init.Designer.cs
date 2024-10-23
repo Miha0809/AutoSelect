@@ -3,6 +3,7 @@ using System;
 using AutoSelect.API.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AutoSelect.API.Migrations
 {
     [DbContext(typeof(AutoSelectDbContext))]
-    partial class AutoSelectDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241022125429_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -233,21 +236,12 @@ namespace AutoSelect.API.Migrations
                 {
                     b.HasBaseType("AutoSelect.API.Models.User");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
                     b.ToTable("Clients", (string)null);
                 });
 
             modelBuilder.Entity("AutoSelect.API.Models.Expert", b =>
                 {
                     b.HasBaseType("AutoSelect.API.Models.User");
-
-                    b.Property<int>("Price")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
 
                     b.ToTable("Experts", (string)null);
                 });

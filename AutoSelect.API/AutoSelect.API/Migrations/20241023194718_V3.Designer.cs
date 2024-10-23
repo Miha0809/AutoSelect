@@ -3,6 +3,7 @@ using System;
 using AutoSelect.API.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AutoSelect.API.Migrations
 {
     [DbContext(typeof(AutoSelectDbContext))]
-    partial class AutoSelectDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241023194718_V3")]
+    partial class V3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -236,6 +239,8 @@ namespace AutoSelect.API.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("text");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Clients", (string)null);
                 });
 
@@ -248,6 +253,8 @@ namespace AutoSelect.API.Migrations
 
                     b.Property<string>("UserId")
                         .HasColumnType("text");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Experts", (string)null);
                 });
@@ -310,6 +317,12 @@ namespace AutoSelect.API.Migrations
                         .HasForeignKey("AutoSelect.API.Models.Client", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("AutoSelect.API.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("AutoSelect.API.Models.Expert", b =>
@@ -319,6 +332,12 @@ namespace AutoSelect.API.Migrations
                         .HasForeignKey("AutoSelect.API.Models.Expert", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("AutoSelect.API.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }
