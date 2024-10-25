@@ -5,8 +5,4 @@ namespace AutoSelect.API.Models.Expert;
 /// </summary>
 public class Expert : User
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public int ExpertKey { get; set; }
 }

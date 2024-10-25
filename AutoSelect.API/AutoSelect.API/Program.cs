@@ -17,10 +17,6 @@ using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -51,19 +47,21 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(xmlPath);
 });
 builder.Services.AddControllers();
+
 string connectionString = builder.Configuration.GetConnectionString("Host")!;
 builder.Services.AddDbContext<AutoSelectDbContext>(options =>
 {
     options.UseLazyLoadingProxies().UseNpgsql(connectionString);
 });
-builder
-    .Services.AddIdentityApiEndpoints<User>(options =>
+builder.Services.AddAuthorization();
+builder.Services.AddIdentityApiEndpoints<User>(options =>
     {
         options.SignIn.RequireConfirmedAccount = false;
         options.User.RequireUniqueEmail = true;
     })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AutoSelectDbContext>();
+
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 // DI for repositories
@@ -96,7 +94,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapIdentityApi<User>();
-app.UseHttpsRedirection();
 
 app.MapHealthChecks(
     "/health",
@@ -106,11 +103,17 @@ app.MapHealthChecks(
         ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
     }
 );
+app.MapHealthChecksUI();
 
+app.UseHttpsRedirection();
+
+app.UseRouting();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapHealthChecksUI();
+app.UseEndpoints(endpoints => { endpoints?.MapControllers(); });
 
 using (var scope = app.Services.CreateScope())
 {
@@ -125,7 +128,6 @@ using (var scope = app.Services.CreateScope())
         }
         else
         {
-            continue;
         }
     }
 }

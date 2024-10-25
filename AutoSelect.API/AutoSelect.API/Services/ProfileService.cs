@@ -92,7 +92,7 @@ public class ProfileService(
             user.FirstName ??= updateProfileDto.FirstName;
             user.LastName ??= updateProfileDto.LastName;
             await userManager.UpdateAsync(user);
-            
+
             var userRoles = await userManager.GetRolesAsync(user);
 
             if (userRoles.Count == 0 && updateProfileDto.IsExpert)

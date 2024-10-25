@@ -23,22 +23,15 @@ public class AutoSelectDbContext(DbContextOptions<AutoSelectDbContext> options)
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
+    
         modelBuilder
             .Entity<Expert>()
             .ToTable("Experts")
-            .HasBaseType<User>()
-            .HasKey("ExpertKey");
-
+            .HasBaseType<User>();
+    
         modelBuilder
             .Entity<Client>()
             .ToTable("Clients")
             .HasBaseType<User>();
-    }
-
-    /// <inheritdoc />
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.EnableSensitiveDataLogging();
     }
 }

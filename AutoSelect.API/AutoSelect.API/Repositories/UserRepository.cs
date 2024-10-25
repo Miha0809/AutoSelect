@@ -15,6 +15,7 @@ public class UserRepository(AutoSelectDbContext context) : IUserRepository
     /// <param name="user">Користувач.</param>
     void IUserRepository.Add<TUser>(TUser user)
     {
+        context.Entry(user).State = EntityState.Deleted;
         context.Set<TUser>().Add(user);
     }
 
