@@ -6,6 +6,8 @@ using AutoSelect.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+namespace AutoSelect.API.Controllers;
+
 /// <summary>
 /// Контроллер профілю для всіх користувачів.
 /// </summary>
@@ -65,11 +67,11 @@ public class ProfileController(IProfileService service, IMapper mapper) : Contro
         try
         {
             var email = User.Identity!.Name!;
-            var isdeleteduser = await service.DeleteAsync<User>(email);
+            var isDeletedUser = await service.DeleteAsync<User>(email);
 
             HttpContext.Response.Cookies.Delete(".AspNetCore.Identity.Application");
 
-            return Ok(isdeleteduser);
+            return Ok(isDeletedUser);
         }
         catch (System.Exception)
         {

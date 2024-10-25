@@ -1,6 +1,6 @@
 using AutoSelect.API.Contexts;
 using AutoSelect.API.Models;
-using AutoSelect.API.Repositpries.Interfaces;
+using AutoSelect.API.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace AutoSelect.API.Repositories;

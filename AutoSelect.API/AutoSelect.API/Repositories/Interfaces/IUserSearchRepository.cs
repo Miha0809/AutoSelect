@@ -11,7 +11,7 @@ public interface IUserSearchRepository
     /// Користувач по елекронній пошті.
     /// </summary>
     /// <param name="email">Електронна пошта.</param>
-    Task<TUser?> GetUserByEmailAsync<TUser>(string email) where TUser : User;
+    Task<TUser> GetUserByEmailAsync<TUser>(string email) where TUser : User;
 
     /// <summary>
     /// Всі користувачі.

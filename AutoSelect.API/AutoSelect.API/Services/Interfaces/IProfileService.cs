@@ -15,10 +15,10 @@ public interface IProfileService
     Task<TUser> ProfileAsync<TUser>(string email) where TUser : User;
 
     /// <summary>
-    /// TODO: name
+    /// Оновлення даних користувача.
     /// </summary>
-    /// <param name="userUpdate"></param>
-    /// <param name="email"></param>
+    /// <param name="userUpdate">Користувач з оновленими даними.</param>
+    /// <param name="email">Електрона пошта авторизованого користувача.</param>
     Task<TUser> UpdateAsync<TUser>(TUser userUpdate, string email) where TUser : User;
     
     /// <summary>
@@ -26,7 +26,7 @@ public interface IProfileService
     /// </summary>
     /// <param name="updateProfileDto">Оновленні дані.</param>
     /// <param name="email">Електронна пошта користувача.</param>
-    Task<TUser?> UpdateAfterFirstLoginAsync<TUser>(
+    Task<TUser> UpdateAfterFirstLoginAsync<TUser>(
         UpdateProfileAfterFirstLoginDto updateProfileDto,
         string email
     ) where TUser : User;

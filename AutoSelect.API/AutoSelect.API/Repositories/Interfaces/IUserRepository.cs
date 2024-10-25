@@ -1,6 +1,6 @@
 using AutoSelect.API.Models;
 
-namespace AutoSelect.API.Repositpries.Interfaces;
+namespace AutoSelect.API.Repositories.Interfaces;
 
 /// <summary>
 /// Інтерфейс репозіторія користувача.

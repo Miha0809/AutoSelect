@@ -2,7 +2,6 @@ using AutoSelect.API.Models;
 using AutoSelect.API.Models.DTOs.Requests;
 using AutoSelect.API.Models.Enums;
 using AutoSelect.API.Repositories.Interfaces;
-using AutoSelect.API.Repositpries.Interfaces;
 using AutoSelect.API.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
@@ -27,17 +26,14 @@ public class ProfileService(
     async Task<TUser> IProfileService.ProfileAsync<TUser>(string email)
     {
         var user = await userSearchRepository.GetUserByEmailAsync<TUser>(email);
-        return user!;
+        return user;
     }
 
     /// <summary>
-    /// TODO: name
+    /// Оновлення даних користувача.
     /// </summary>
-    /// <param name="userUpdate"></param>
-    /// <param name="email"></param>
-    /// <typeparam name="TUser"></typeparam>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
+    /// <param name="userUpdate">Користувач з оновленими даними.</param>
+    /// <param name="email">Електрона пошта авторизованого користувача.</param>
     async Task<TUser> IProfileService.UpdateAsync<TUser>(TUser userUpdate, string email)
     {
         var user = await userSearchRepository.GetUserByEmailAsync<TUser>(email);
@@ -49,7 +45,7 @@ public class ProfileService(
 
         user = userUpdate;
         
-        userRepository.Update<TUser>(user);
+        userRepository.Update(user);
         userRepository.Save();
 
         return (await userSearchRepository.GetUserByEmailAsync<TUser>(email))!;
@@ -69,7 +65,7 @@ public class ProfileService(
             throw new ArgumentNullException(nameof(user), "User is null");
         }
 
-        userRepository.Remove(user!);
+        userRepository.Remove(user);
         userRepository.Save();
 
         var isExistsUser = await userSearchRepository.GetUserByEmailAsync<TUser>(email) is null;
@@ -82,17 +78,17 @@ public class ProfileService(
     /// </summary>
     /// <param name="updateProfileDto">Оновленні дані.</param>
     /// <param name="email">Електронна пошта користувача.</param>
-    async Task<TUser?> IProfileService.UpdateAfterFirstLoginAsync<TUser>(
+    async Task<TUser> IProfileService.UpdateAfterFirstLoginAsync<TUser>(
         UpdateProfileAfterFirstLoginDto updateProfileDto,
         string email
-    ) where TUser : class
+    )
     {
         var user = await userSearchRepository.GetUserByEmailAsync<TUser>(email);
 
-        if (user is not null && user.FirstName is null && user.LastName is null)
+        if (user.FirstName is null && user.LastName is null)
         {
-            user!.FirstName ??= updateProfileDto.FirstName;
-            user!.LastName ??= updateProfileDto.LastName;
+            user.FirstName ??= updateProfileDto.FirstName;
+            user.LastName ??= updateProfileDto.LastName;
 
             var userRoles = await userManager.GetRolesAsync(user);
 
@@ -121,7 +117,6 @@ public class ProfileService(
                 userRepository.Add(client);
             }
 
-            // userRepository.Update(user);
             userRepository.Save();
 
             return user;

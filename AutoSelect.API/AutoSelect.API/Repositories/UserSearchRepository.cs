@@ -2,7 +2,7 @@ using AutoSelect.API.Contexts;
 using AutoSelect.API.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace AutoSelect.API.Repositpries;
+namespace AutoSelect.API.Repositories;
 
 /// <summary>
 /// Репозіторі пошуку користувача.
@@ -13,9 +13,9 @@ public class UserSearchRepository(AutoSelectDbContext context) : IUserSearchRepo
     /// Користувач по елекронній пошті.
     /// </summary>
     /// <param name="email">Електронна пошта.</param>
-    async Task<TUser?> IUserSearchRepository.GetUserByEmailAsync<TUser>(string email) where TUser : class
+    async Task<TUser> IUserSearchRepository.GetUserByEmailAsync<TUser>(string email)
     {
-        var userByEmail = await context.Set<TUser>().FirstOrDefaultAsync(user =>
+        var userByEmail = await context.Set<TUser>().FirstAsync(user =>
             user.Email!.Equals(email)
         );
 
