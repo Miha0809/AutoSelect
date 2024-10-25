@@ -12,21 +12,28 @@ public interface IProfileService
     /// Профіль користувача.
     /// </summary>
     /// <param name="email">Електронна пошта користувача.</param>
-    Task<User> ProfileAsync(string email);
+    Task<TUser> ProfileAsync<TUser>(string email) where TUser : User;
 
+    /// <summary>
+    /// Оновлення даних користувача.
+    /// </summary>
+    /// <param name="userUpdate">Користувач з оновленими даними.</param>
+    /// <param name="email">Електрона пошта авторизованого користувача.</param>
+    Task<TUser> UpdateAsync<TUser>(TUser userUpdate, string email) where TUser : User;
+    
     /// <summary>
     /// Редагування профілю користувача.
     /// </summary>
     /// <param name="updateProfileDto">Оновленні дані.</param>
     /// <param name="email">Електронна пошта користувача.</param>
-    Task<User?> UpdateAfterFirstLoginAsync(
+    Task<TUser> UpdateAfterFirstLoginAsync<TUser>(
         UpdateProfileAfterFirstLoginDto updateProfileDto,
         string email
-    );
+    ) where TUser : User;
 
     /// <summary>
     /// Видалити профіль.
     /// </summary>
     /// <param name="email">Електронна пошта користувача.</param>
-    Task<bool> DeleteAsync(string email);
+    Task<bool> DeleteAsync<TUser>(string email) where TUser : User;
 }

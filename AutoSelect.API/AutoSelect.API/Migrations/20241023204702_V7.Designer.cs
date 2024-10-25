@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AutoSelect.API.Migrations
 {
     [DbContext(typeof(AutoSelectDbContext))]
-    [Migration("20241008161231_Initialization")]
-    partial class Initialization
+    [Migration("20241023204702_V7")]
+    partial class V7
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,11 +39,6 @@ namespace AutoSelect.API.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("text");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("character varying(8)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -102,9 +97,7 @@ namespace AutoSelect.API.Migrations
 
                     b.ToTable("AspNetUsers", (string)null);
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("User");
-
-                    b.UseTphMappingStrategy();
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -243,14 +236,23 @@ namespace AutoSelect.API.Migrations
                 {
                     b.HasBaseType("AutoSelect.API.Models.User");
 
-                    b.HasDiscriminator().HasValue("Client");
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.ToTable("Clients", (string)null);
                 });
 
             modelBuilder.Entity("AutoSelect.API.Models.Expert", b =>
                 {
                     b.HasBaseType("AutoSelect.API.Models.User");
 
-                    b.HasDiscriminator().HasValue("Expert");
+                    b.Property<int>("Price")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.ToTable("Experts", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -300,6 +302,24 @@ namespace AutoSelect.API.Migrations
                     b.HasOne("AutoSelect.API.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AutoSelect.API.Models.Client", b =>
+                {
+                    b.HasOne("AutoSelect.API.Models.User", null)
+                        .WithOne()
+                        .HasForeignKey("AutoSelect.API.Models.Client", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AutoSelect.API.Models.Expert", b =>
+                {
+                    b.HasOne("AutoSelect.API.Models.User", null)
+                        .WithOne()
+                        .HasForeignKey("AutoSelect.API.Models.Expert", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

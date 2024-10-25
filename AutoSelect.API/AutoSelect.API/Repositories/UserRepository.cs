@@ -1,8 +1,9 @@
 using AutoSelect.API.Contexts;
 using AutoSelect.API.Models;
-using AutoSelect.API.Repositpries.Interfaces;
+using AutoSelect.API.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
-namespace AutoSelect.API.Repositpries;
+namespace AutoSelect.API.Repositories;
 
 /// <summary>
 /// Репозіторій для користувача.
@@ -10,21 +11,31 @@ namespace AutoSelect.API.Repositpries;
 public class UserRepository(AutoSelectDbContext context) : IUserRepository
 {
     /// <summary>
+    /// Добавлення.
+    /// </summary>
+    /// <param name="user">Користувач.</param>
+    public void Add<TUser>(TUser user) where TUser : User
+    {
+        context.Set<TUser>().Entry(user).State = EntityState.Deleted;
+        context.Set<TUser>().Add(user);
+    }
+
+    /// <summary>
     /// Оновлення.
     /// </summary>
     /// <param name="user">Користувач.</param>
-    void IUserRepository.Update(User user)
+    void IUserRepository.Update<TUser>(TUser user)
     {
-        context.Users.Update(user);
+        context.Set<TUser>().Update(user);
     }
 
     /// <summary>
     /// Видалення.
     /// </summary>
     /// <param name="user">Користувач.</param>
-    void IUserRepository.Remove(User user)
+    public void Remove<TUser>(TUser user) where TUser : User
     {
-        context.Users.Remove(user);
+        context.Set<TUser>().Remove(user);
     }
 
     /// <summary>

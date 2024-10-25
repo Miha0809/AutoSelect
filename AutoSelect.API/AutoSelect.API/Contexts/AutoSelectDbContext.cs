@@ -15,4 +15,20 @@ public class AutoSelectDbContext(DbContextOptions<AutoSelectDbContext> options)
 
     /// <inheritdoc />
     public required DbSet<Client>? Clients { get; set; }
+
+    /// <inheritdoc />
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder
+            .Entity<Expert>()
+            .ToTable("Experts")
+            .HasBaseType<User>();
+
+        modelBuilder
+            .Entity<Client>()
+            .ToTable("Clients")
+            .HasBaseType<User>();
+    }
 }
