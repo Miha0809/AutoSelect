@@ -13,25 +13,18 @@ namespace AutoSelect.API.Controllers.Expert;
 /// <param name="mapper">Маппер об'єктів.</param>
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+[Authorize(Roles = "Expert")]
 public class ProfileExpertController(IProfileService service, IMapper mapper) : Controller
 {
     /// <summary>
-    /// Профіль користувача.
+    /// Профіль експерта.
     /// </summary>
     [HttpGet]
     public async Task<IActionResult> Profile()
     {
-        try
-        {
-            var email = User.Identity!.Name!;
-            var user = await service.ProfileAsync<Models.Expert>(email);
+        var email = User.Identity!.Name!;
+        var user = await service.ProfileAsync<Models.Expert.Expert>(email);
 
-            return Ok(mapper.Map<ExpertPrivateShowDto>(user));
-        }
-        catch (System.Exception)
-        {
-            throw;
-        }
+        return Ok(mapper.Map<ExpertPrivateShowDto>(user));
     }
 }

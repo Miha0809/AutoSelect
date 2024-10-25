@@ -13,25 +13,18 @@ namespace AutoSelect.API.Controllers.Client;
 /// <param name="mapper">Маппер об'єктів.</param>
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+[Authorize(Roles = "Client")]
 public class ProfileClientController(IProfileService service, IMapper mapper) : Controller
 {
     /// <summary>
-    /// Профіль користувача.
+    /// Профіль клієнта.
     /// </summary>
     [HttpGet]
     public async Task<IActionResult> Profile()
     {
-        try
-        {
-            var email = User.Identity!.Name!;
-            var user = await service.ProfileAsync<Models.Client>(email);
+        var email = User.Identity!.Name!;
+        var user = await service.ProfileAsync<Models.Client.Client>(email);
 
-            return Ok(mapper.Map<ClientPrivateShowDto>(user));
-        }
-        catch (System.Exception)
-        {
-            throw;
-        }
+        return Ok(mapper.Map<ClientPrivateShowDto>(user));
     }
 }

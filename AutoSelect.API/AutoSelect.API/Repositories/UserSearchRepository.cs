@@ -13,10 +13,10 @@ public class UserSearchRepository(AutoSelectDbContext context) : IUserSearchRepo
     /// Користувач по елекронній пошті.
     /// </summary>
     /// <param name="email">Електронна пошта.</param>
-    async Task<TUser> IUserSearchRepository.GetUserByEmailAsync<TUser>(string email)
+    async Task<TUser?> IUserSearchRepository.GetUserByEmailAsync<TUser>(string email) where TUser : class
     {
-        var userByEmail = await context.Set<TUser>().FirstAsync(user =>
-            user.Email!.Equals(email)
+        var userByEmail = await context.Set<TUser>().FirstOrDefaultAsync(user =>
+            user!.Email!.Equals(email)
         );
 
         return userByEmail;

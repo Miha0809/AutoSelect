@@ -1,7 +1,7 @@
 using AutoMapper;
 using AutoSelect.API.Models;
 using AutoSelect.API.Models.DTOs.Requests;
-using AutoSelect.API.Models.DTOs.Responses.Expert;
+using AutoSelect.API.Models.DTOs.Responses;
 using AutoSelect.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,17 +27,10 @@ public class ProfileController(IProfileService service, IMapper mapper) : Contro
         [FromBody] UpdateProfileAfterFirstLoginDto updateProfileDto
     )
     {
-        try
-        {
-            var email = User.Identity!.Name!;
-            var updatedUser = await service.UpdateAfterFirstLoginAsync<User>(updateProfileDto, email);
+        var email = User.Identity!.Name!;
+        var updatedUser = await service.UpdateAfterFirstLoginAsync<User>(updateProfileDto, email);
 
-            return Ok(mapper.Map<ExpertPrivateShowDto>(updatedUser));
-        }
-        catch (System.Exception)
-        {
-            throw;
-        }
+        return Ok(mapper.Map<UserInfoAfterFirstLoginDto>(updatedUser));
     }
 
     /// <summary>
@@ -46,16 +39,9 @@ public class ProfileController(IProfileService service, IMapper mapper) : Contro
     [HttpDelete("logout")]
     public IActionResult Logout()
     {
-        try
-        {
-            HttpContext.Response.Cookies.Delete(".AspNetCore.Identity.Application");
+        HttpContext.Response.Cookies.Delete(".AspNetCore.Identity.Application");
 
-            return Ok(StatusCodes.Status200OK);
-        }
-        catch (System.Exception)
-        {
-            throw;
-        }
+        return Ok(StatusCodes.Status200OK);
     }
 
     /// <summary>
@@ -64,18 +50,11 @@ public class ProfileController(IProfileService service, IMapper mapper) : Contro
     [HttpDelete]
     public async Task<IActionResult> Delete()
     {
-        try
-        {
-            var email = User.Identity!.Name!;
-            var isDeletedUser = await service.DeleteAsync<User>(email);
+        var email = User.Identity!.Name!;
+        var isDeletedUser = await service.DeleteAsync<User>(email);
 
-            HttpContext.Response.Cookies.Delete(".AspNetCore.Identity.Application");
+        HttpContext.Response.Cookies.Delete(".AspNetCore.Identity.Application");
 
-            return Ok(isDeletedUser);
-        }
-        catch (System.Exception)
-        {
-            throw;
-        }
+        return Ok(isDeletedUser);
     }
 }

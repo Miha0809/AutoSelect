@@ -1,4 +1,4 @@
-namespace AutoSelect.API.Models;
+namespace AutoSelect.API.Models.Client;
 
 /// <summary>
 /// Клієнт.

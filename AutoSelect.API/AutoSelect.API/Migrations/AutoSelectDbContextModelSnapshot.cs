@@ -229,25 +229,16 @@ namespace AutoSelect.API.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AutoSelect.API.Models.Client", b =>
+            modelBuilder.Entity("AutoSelect.API.Models.Client.Client", b =>
                 {
                     b.HasBaseType("AutoSelect.API.Models.User");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
 
                     b.ToTable("Clients", (string)null);
                 });
 
-            modelBuilder.Entity("AutoSelect.API.Models.Expert", b =>
+            modelBuilder.Entity("AutoSelect.API.Models.Expert.Expert", b =>
                 {
                     b.HasBaseType("AutoSelect.API.Models.User");
-
-                    b.Property<int>("Price")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
 
                     b.ToTable("Experts", (string)null);
                 });
@@ -303,20 +294,20 @@ namespace AutoSelect.API.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("AutoSelect.API.Models.Client", b =>
+            modelBuilder.Entity("AutoSelect.API.Models.Client.Client", b =>
                 {
                     b.HasOne("AutoSelect.API.Models.User", null)
                         .WithOne()
-                        .HasForeignKey("AutoSelect.API.Models.Client", "Id")
+                        .HasForeignKey("AutoSelect.API.Models.Client.Client", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("AutoSelect.API.Models.Expert", b =>
+            modelBuilder.Entity("AutoSelect.API.Models.Expert.Expert", b =>
                 {
                     b.HasOne("AutoSelect.API.Models.User", null)
                         .WithOne()
-                        .HasForeignKey("AutoSelect.API.Models.Expert", "Id")
+                        .HasForeignKey("AutoSelect.API.Models.Expert.Expert", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

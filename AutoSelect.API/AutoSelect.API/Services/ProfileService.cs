@@ -1,6 +1,8 @@
 using AutoSelect.API.Models;
+using AutoSelect.API.Models.Client;
 using AutoSelect.API.Models.DTOs.Requests;
 using AutoSelect.API.Models.Enums;
+using AutoSelect.API.Models.Expert;
 using AutoSelect.API.Repositories.Interfaces;
 using AutoSelect.API.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -26,7 +28,7 @@ public class ProfileService(
     async Task<TUser> IProfileService.ProfileAsync<TUser>(string email)
     {
         var user = await userSearchRepository.GetUserByEmailAsync<TUser>(email);
-        return user;
+        return user!;
     }
 
     /// <summary>
@@ -85,36 +87,37 @@ public class ProfileService(
     {
         var user = await userSearchRepository.GetUserByEmailAsync<TUser>(email);
 
-        if (user.FirstName is null && user.LastName is null)
+        if (user!.FirstName is null && user.LastName is null)
         {
             user.FirstName ??= updateProfileDto.FirstName;
             user.LastName ??= updateProfileDto.LastName;
-
+            await userManager.UpdateAsync(user);
+            
             var userRoles = await userManager.GetRolesAsync(user);
 
             if (userRoles.Count == 0 && updateProfileDto.IsExpert)
             {
-                await userManager.AddToRoleAsync(user, nameof(Roles.Expert));
-
                 var expert = new Expert
                 {
                     Id = user.Id,
                     FirstName = user.FirstName,
                     LastName = user.LastName
                 };
+                
                 userRepository.Add(expert);
+                await userManager.AddToRoleAsync(expert, nameof(Roles.Expert));
             }
             else if (userRoles.Count == 0 && !updateProfileDto.IsExpert)
             {
-                await userManager.AddToRoleAsync(user, nameof(Roles.Client));
-
                 var client = new Client
                 {
                     Id = user.Id,
                     FirstName = user.FirstName,
                     LastName = user.LastName
                 };
+                
                 userRepository.Add(client);
+                await userManager.AddToRoleAsync(client, nameof(Roles.Client));
             }
 
             userRepository.Save();

@@ -1,5 +1,4 @@
 using AutoSelect.API.Contexts;
-using AutoSelect.API.Models;
 using AutoSelect.API.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,9 +13,8 @@ public class UserRepository(AutoSelectDbContext context) : IUserRepository
     /// Добавлення.
     /// </summary>
     /// <param name="user">Користувач.</param>
-    public void Add<TUser>(TUser user) where TUser : User
+    void IUserRepository.Add<TUser>(TUser user)
     {
-        context.Set<TUser>().Entry(user).State = EntityState.Deleted;
         context.Set<TUser>().Add(user);
     }
 
@@ -33,7 +31,7 @@ public class UserRepository(AutoSelectDbContext context) : IUserRepository
     /// Видалення.
     /// </summary>
     /// <param name="user">Користувач.</param>
-    public void Remove<TUser>(TUser user) where TUser : User
+    void IUserRepository.Remove<TUser>(TUser user)
     {
         context.Set<TUser>().Remove(user);
     }

@@ -2,6 +2,7 @@ using System.Reflection;
 using AutoSelect.API.Contexts;
 using AutoSelect.API.Models;
 using AutoSelect.API.Models.Enums;
+using AutoSelect.API.Profiles;
 using AutoSelect.API.Repositories;
 using AutoSelect.API.Repositories.Interfaces;
 using AutoSelect.API.Services;
@@ -12,7 +13,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
-using Sport.API.Profiles;
 using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -1,3 +1,6 @@
+using AutoSelect.API.Models.Client;
+using AutoSelect.API.Models.Expert;
+
 namespace AutoSelect.API.Contexts;
 
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -24,11 +27,18 @@ public class AutoSelectDbContext(DbContextOptions<AutoSelectDbContext> options)
         modelBuilder
             .Entity<Expert>()
             .ToTable("Experts")
-            .HasBaseType<User>();
+            .HasBaseType<User>()
+            .HasKey("ExpertKey");
 
         modelBuilder
             .Entity<Client>()
             .ToTable("Clients")
             .HasBaseType<User>();
+    }
+
+    /// <inheritdoc />
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.EnableSensitiveDataLogging();
     }
 }
