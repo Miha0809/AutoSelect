@@ -54,7 +54,8 @@ builder.Services.AddDbContext<AutoSelectDbContext>(options =>
     options.UseLazyLoadingProxies().UseNpgsql(connectionString);
 });
 builder.Services.AddAuthorization();
-builder.Services.AddIdentityApiEndpoints<User>(options =>
+builder
+    .Services.AddIdentityApiEndpoints<User>(options =>
     {
         options.SignIn.RequireConfirmedAccount = false;
         options.User.RequireUniqueEmail = true;
@@ -113,7 +114,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.UseEndpoints(endpoints => { endpoints?.MapControllers(); });
+app.UseEndpoints(endpoints =>
+{
+    endpoints?.MapControllers();
+});
 
 using (var scope = app.Services.CreateScope())
 {
@@ -125,9 +129,6 @@ using (var scope = app.Services.CreateScope())
         if (!await roleManager.RoleExistsAsync(role))
         {
             await roleManager.CreateAsync(new IdentityRole(role));
-        }
-        else
-        {
         }
     }
 }
