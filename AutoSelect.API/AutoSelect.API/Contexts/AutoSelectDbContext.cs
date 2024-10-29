@@ -20,6 +20,9 @@ public class AutoSelectDbContext(DbContextOptions<AutoSelectDbContext> options)
     public required DbSet<Client>? Clients { get; set; }
 
     /// <inheritdoc />
+    public required DbSet<ServiceInfo> ServiceInfos { get; set; }
+
+    /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

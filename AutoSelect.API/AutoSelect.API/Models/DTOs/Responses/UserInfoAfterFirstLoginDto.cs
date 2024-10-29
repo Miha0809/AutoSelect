@@ -1,7 +1,7 @@
 namespace AutoSelect.API.Models.DTOs.Responses;
 
 /// <summary>
-/// TODO: name
+/// Dto для інформації після першого входу користувача.
 /// </summary>
 public class UserInfoAfterFirstLoginDto
 {

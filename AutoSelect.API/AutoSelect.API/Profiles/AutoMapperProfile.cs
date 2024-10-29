@@ -24,6 +24,7 @@ public class AutoMapperProfile : Profile
         // Expert
         CreateMap<User, ExpertPublicShowDto>();
         CreateMap<User, ExpertPrivateShowDto>();
+        CreateMap<User, ServiceInfoDto>();
 
         // Client
         CreateMap<User, ClientPublicShowDto>();

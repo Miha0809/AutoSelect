@@ -1,18 +1,10 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace AutoSelect.API.Models.Expert;
+namespace AutoSelect.API.Models.DTOs.Responses.Expert;
 
 /// <summary>
 /// TODO: name
 /// </summary>
-public class ServiceInfo
+public class ServiceInfoDto
 {
-    /// <summary>
-    /// Ідентифікатор.
-    /// </summary>
-    [Key]
-    public int Id { get; set; }
-    
     /// <summary>
     /// TODO: name
     /// </summary>

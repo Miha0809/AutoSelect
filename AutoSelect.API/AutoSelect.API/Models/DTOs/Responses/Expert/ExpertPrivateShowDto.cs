@@ -1,3 +1,5 @@
+using AutoSelect.API.Models.Expert;
+
 namespace AutoSelect.API.Models.DTOs.Responses.Expert;
 
 /// <summary>
@@ -19,4 +21,9 @@ public class ExpertPrivateShowDto
   /// Прізвище.
   /// </summary>
   public required string LastName { get; set; }
+  
+  /// <summary>
+  /// TODO: name
+  /// </summary>
+  public ServiceInfoDto? ServiceInfo { get; set; }
 }
