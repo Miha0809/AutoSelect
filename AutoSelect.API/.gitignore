@@ -1,0 +1,11 @@
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+Migrations/
+
+.idea/
+
+AutoSelect.API/bin/
+AutoSelect.API/obj/
+
+AutoSelect.API/.env
