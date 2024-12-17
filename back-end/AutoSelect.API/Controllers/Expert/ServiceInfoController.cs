@@ -40,7 +40,7 @@ public class ServiceInfoController(AutoSelectDbContext context) : Controller
         var email = User.Identity!.Name!;
         var user = await context.Experts.FirstOrDefaultAsync(s => s.Email!.Equals(email));
         
-        user!.ServiceInfos.Add(dto);
+        // user!.ServiceInfos.Add(dto);
 
         return Ok(user);
     }
