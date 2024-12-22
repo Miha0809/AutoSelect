@@ -13,7 +13,7 @@ public class UserRepository(AutoSelectDbContext context) : IUserRepository
     /// <summary>
     /// Всі користувачі.
     /// </summary>
-    async Task<IEnumerable<TUser>> IUserRepository.GetAllUsers<TUser>()
+    async Task<IEnumerable<TUser>> IUserRepository.GetAllUsersAsync<TUser>()
     {
         var users = await context.Set<TUser>().ToListAsync();
 

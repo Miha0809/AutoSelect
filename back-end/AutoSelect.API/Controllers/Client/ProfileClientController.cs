@@ -10,12 +10,12 @@ namespace AutoSelect.API.Controllers.Client;
 /// <summary>
 /// Контроллер профілю клієнта.
 /// </summary>
-/// <param name="service">Сервіс профілю користувача.</param>
+/// <param name="userService">Сервіс профілю користувача.</param>
 /// <param name="mapper">Маппер об'єктів.</param>
 [ApiController]
 [Route("api/[controller]")]
 [Authorize(Roles = nameof(Roles.Client))]
-public class ProfileClientController(IProfileService service, IMapper mapper) : ControllerBase
+public class ProfileClientController(IUserService userService, IMapper mapper) : ControllerBase
 {
     /// <summary>
     /// Профіль клієнта.
@@ -26,7 +26,7 @@ public class ProfileClientController(IProfileService service, IMapper mapper) : 
         try
         {
             var email = User.Identity!.Name!;
-            var user = await service.GetProfileAsync<Models.Client.Client>(email);
+            var user = await userService.GetProfileAsync<Models.Client.Client>(email);
 
             return Ok(mapper.Map<ProfileDto>(user));
         }

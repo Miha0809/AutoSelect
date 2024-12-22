@@ -1,4 +1,3 @@
-using AutoMapper;
 using AutoSelect.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,11 +8,11 @@ namespace AutoSelect.API.Controllers.User;
 /// <summary>
 /// Контроллер профілю для всіх користувачів.
 /// </summary>
-/// <param name="service">Сервіс профілю користувача.</param>
+/// <param name="userService">Сервіс профілю користувача.</param>
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class ProfileController(IProfileService service) : ControllerBase
+public class ProfileController(IUserService userService) : ControllerBase
 {
     /// <summary>
     /// Редагування данних користувача після першої атворизації.
@@ -27,7 +26,7 @@ public class ProfileController(IProfileService service) : ControllerBase
         try
         {
             var email = User.Identity!.Name!;
-            await service.UpdateAfterFirstLoginAsync<Models.User.User, UpdateProfileAfterFirstLoginDto>(updateProfileDto, email);
+            await userService.UpdateAsync<Models.User.User, UpdateProfileAfterFirstLoginDto>(updateProfileDto, email);
 
             return Ok(StatusCodes.Status200OK);
         }
@@ -64,7 +63,7 @@ public class ProfileController(IProfileService service) : ControllerBase
         try
         {
             var email = User.Identity!.Name!;
-            var isDeletedUser = await service.DeleteAsync<Models.User.User>(email);
+            var isDeletedUser = await userService.DeleteAsync<Models.User.User>(email);
 
             RemoveIdentityCookies();
 
