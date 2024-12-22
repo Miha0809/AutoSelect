@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
 namespace AutoSelect.API.Models.User;
@@ -10,11 +11,13 @@ public class User : IdentityUser
     /// <summary>
     /// Ім'я.
     /// </summary>
+    [StringLength(16, MinimumLength = 2)]
     public string? FirstName { get; set; }
 
     /// <summary>
     /// Прізвище.
     /// </summary>
+    [StringLength(32, MinimumLength = 2)]
     public string? LastName { get; set; }
 
     /// <summary>

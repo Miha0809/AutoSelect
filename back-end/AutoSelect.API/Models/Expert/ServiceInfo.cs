@@ -16,16 +16,19 @@ public class ServiceInfo
     /// <summary>
     /// Ціна.
     /// </summary>
+    [Range(0, ushort.MaxValue)]
     public ushort Price { get; set; }
 
     /// <summary>
     /// Назва.
     /// </summary>
+    [StringLength(64, MinimumLength = 4)]
     public required string Name { get; set; }
 
     /// <summary>
     /// Не обов'язковий опис.
     /// </summary>
+    [StringLength(256, MinimumLength = 8)]
     public string? Description { get; set; }
 
     /// <summary>
