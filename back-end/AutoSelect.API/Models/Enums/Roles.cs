@@ -5,9 +5,9 @@ namespace AutoSelect.API.Models.Enums;
 /// </summary>
 public enum Roles
 {
-  /// Клієнт.
-  Client,
+	/// Клієнт.
+	Client,
 
-  /// Експерт.
-  Expert
+	/// Експерт.
+	Expert
 }

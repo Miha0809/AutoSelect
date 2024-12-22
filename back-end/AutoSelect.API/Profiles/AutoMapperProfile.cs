@@ -17,7 +17,7 @@ public class AutoMapperProfile : Profile
     /// </summary>
     public AutoMapperProfile()
     {
-        // All users
+        // Users
         CreateMap<User, UpdateProfileAfterFirstLoginDto>().ReverseMap();
 
         // Expert

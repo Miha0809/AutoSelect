@@ -13,7 +13,6 @@ namespace AutoSelect.API.Context;
 public class AutoSelectDbContext(DbContextOptions<AutoSelectDbContext> options)
     : IdentityDbContext<User>(options)
 {
-
     /// <inheritdoc />
     public required DbSet<Expert> Experts { get; set; }
 
