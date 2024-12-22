@@ -1,11 +1,12 @@
-using AutoSelect.API.Models;
+using AutoSelect.API.Models.User;
 using AutoSelect.API.Models.Client;
-using AutoSelect.API.Models.DTOs.Requests;
 using AutoSelect.API.Models.Enums;
 using AutoSelect.API.Models.Expert;
 using AutoSelect.API.Repositories.Interfaces;
 using AutoSelect.API.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using AutoMapper;
+using AutoSelect.API.DTOs.User.Requests;
 
 namespace AutoSelect.API.Services;
 
@@ -13,46 +14,33 @@ namespace AutoSelect.API.Services;
 /// Сервіс профілю користувача.
 /// </summary>
 /// <param name="userRepository">Репозіторі користувача.</param>
-/// <param name="userSearchRepository">Репозіторі пошуку користувача.</param>
 /// <param name="userManager">Менеджер Identity користувача.</param>
+/// <param name="mapper">Маппер об'єктів</param>
 public class ProfileService(
     IUserRepository userRepository,
-    IUserSearchRepository userSearchRepository,
-    UserManager<User> userManager
+    UserManager<User> userManager,
+    IMapper mapper
 ) : IProfileService
 {
+    /// <summary>
+    /// Всі користувачі.
+    /// </summary>
+    async Task<IEnumerable<TUser>> IProfileService.GetAllProfilesAsync<TUser>()
+    {
+        var users = await userRepository.GetAllUsers<TUser>();
+
+        return users;
+    }
+
     /// <summary>
     /// Профіль користувача.
     /// </summary>
     /// <param name="email">Електронна пошта користувача.</param>
-    async Task<TUser> IProfileService.ProfileAsync<TUser>(string email)
+    async Task<TUser> IProfileService.GetProfileAsync<TUser>(string email)
     {
-        var user = await userSearchRepository.GetUserByEmailAsync<TUser>(email);
+        var user = await userRepository.GetUserByEmailAsync<TUser>(email);
         return user!;
     }
-
-    /// <summary>
-    /// Оновлення даних користувача.
-    /// </summary>
-    /// <param name="userUpdate">Користувач з оновленими даними.</param>
-    /// <param name="email">Електрона пошта авторизованого користувача.</param>
-    async Task<TUser> IProfileService.UpdateAsync<TUser>(TUser userUpdate, string email)
-    {
-        var user = await userSearchRepository.GetUserByEmailAsync<TUser>(email);
-        
-        if (user is null)
-        {
-            throw new ArgumentNullException(nameof(user), "User is null");
-        }
-
-        user = userUpdate;
-        
-        userRepository.Update(user);
-        userRepository.Save();
-
-        return (await userSearchRepository.GetUserByEmailAsync<TUser>(email))!;
-    }
-
 
     /// <summary>
     /// Видалити профіль.
@@ -60,7 +48,7 @@ public class ProfileService(
     /// <param name="email">Електронна пошта користувача.</param>
     async Task<bool> IProfileService.DeleteAsync<TUser>(string email)
     {
-        var user = await userSearchRepository.GetUserByEmailAsync<TUser>(email);
+        var user = await userRepository.GetUserByEmailAsync<TUser>(email);
 
         if (user is null)
         {
@@ -68,9 +56,9 @@ public class ProfileService(
         }
 
         userRepository.Remove(user);
-        userRepository.Save();
+        await userRepository.SaveAsync();
 
-        var isExistsUser = await userSearchRepository.GetUserByEmailAsync<TUser>(email) is null;
+        var isExistsUser = await userRepository.GetUserByEmailAsync<TUser>(email) is null;
 
         return isExistsUser;
     }
@@ -80,51 +68,36 @@ public class ProfileService(
     /// </summary>
     /// <param name="updateProfileDto">Оновленні дані.</param>
     /// <param name="email">Електронна пошта користувача.</param>
-    async Task<TUser> IProfileService.UpdateAfterFirstLoginAsync<TUser>(
-        UpdateProfileAfterFirstLoginDto updateProfileDto,
+    async Task IProfileService.UpdateAfterFirstLoginAsync<TUser, TUpdate>(
+        TUpdate updateProfileDto,
         string email
     )
     {
-        var user = await userSearchRepository.GetUserByEmailAsync<TUser>(email);
+        var user = await userRepository.GetUserByEmailAsync<TUser>(email);
 
-        if (user!.FirstName is null && user.LastName is null)
+        mapper.Map(updateProfileDto, user);
+        await userManager.UpdateAsync(user!);
+
+        var userRoles = await userManager.GetRolesAsync(user!);
+
+        if (userRoles.Count == 0)
         {
-            user.FirstName ??= updateProfileDto.FirstName;
-            user.LastName ??= updateProfileDto.LastName;
-            await userManager.UpdateAsync(user);
-
-            var userRoles = await userManager.GetRolesAsync(user);
-
-            if (userRoles.Count == 0 && updateProfileDto.IsExpert)
+            if (updateProfileDto is UpdateProfileAfterFirstLoginDto update && update.IsExpert)
             {
-                var expert = new Expert
-                {
-                    Id = user.Id,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName
-                };
-                
+                var expert = new Expert(user!);
+
                 userRepository.Add(expert);
                 await userManager.AddToRoleAsync(expert, nameof(Roles.Expert));
             }
-            else if (userRoles.Count == 0 && !updateProfileDto.IsExpert)
+            else
             {
-                var client = new Client
-                {
-                    Id = user.Id,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName
-                };
-                
+                var client = new Client(user!);
+
                 userRepository.Add(client);
                 await userManager.AddToRoleAsync(client, nameof(Roles.Client));
             }
-
-            userRepository.Save();
-
-            return user;
         }
 
-        throw new ArgumentException(nameof(user), "User is changed");
+        await userRepository.SaveAsync();
     }
 }

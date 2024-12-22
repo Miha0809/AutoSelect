@@ -1,4 +1,4 @@
-using AutoSelect.API.Models;
+using AutoSelect.API.Models.User;
 
 namespace AutoSelect.API.Repositories.Interfaces;
 
@@ -8,19 +8,24 @@ namespace AutoSelect.API.Repositories.Interfaces;
 public interface IUserRepository
 {
     /// <summary>
-    /// Добавлення.
+    /// Всі користувачі.
+    /// </summary>
+    Task<IEnumerable<TUser>> GetAllUsers<TUser>() where TUser : User;
+
+    /// <summary>
+    /// Користувач по елекронній пошті.
+    /// </summary>
+    /// <param name="email">Електронна пошта.</param>
+    Task<TUser?> GetUserByEmailAsync<TUser>(string email) where TUser : User;
+
+    /// <summary>
+    /// Створити нового користувача.
     /// </summary>
     /// <param name="user">Користувач.</param>
     void Add<TUser>(TUser user) where TUser : User;
-    
-    /// <summary>
-    /// Оновлення.
-    /// </summary>
-    /// <param name="user">Користувач.</param>
-    void Update<TUser>(TUser user) where TUser : User;
 
     /// <summary>
-    /// Видалення.
+    /// Видалення користувача.
     /// </summary>
     /// <param name="user">Користувач.</param>
     void Remove<TUser>(TUser user) where TUser : User;
@@ -28,5 +33,5 @@ public interface IUserRepository
     /// <summary>
     /// Збереження змін.
     /// </summary>
-    void Save();
+    Task SaveAsync();
 }

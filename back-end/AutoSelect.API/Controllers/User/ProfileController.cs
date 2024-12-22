@@ -1,22 +1,19 @@
 using AutoMapper;
-using AutoSelect.API.Models;
-using AutoSelect.API.Models.DTOs.Requests;
-using AutoSelect.API.Models.DTOs.Responses;
 using AutoSelect.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using AutoSelect.API.DTOs.User.Requests;
 
-namespace AutoSelect.API.Controllers;
+namespace AutoSelect.API.Controllers.User;
 
 /// <summary>
 /// Контроллер профілю для всіх користувачів.
 /// </summary>
 /// <param name="service">Сервіс профілю користувача.</param>
-/// <param name="mapper">Маппер об'єктів.</param>
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class ProfileController(IProfileService service, IMapper mapper) : Controller
+public class ProfileController(IProfileService service) : ControllerBase
 {
     /// <summary>
     /// Редагування данних користувача після першої атворизації.
@@ -27,10 +24,17 @@ public class ProfileController(IProfileService service, IMapper mapper) : Contro
         [FromBody] UpdateProfileAfterFirstLoginDto updateProfileDto
     )
     {
-        var email = User.Identity!.Name!;
-        var updatedUser = await service.UpdateAfterFirstLoginAsync<User>(updateProfileDto, email);
+        try
+        {
+            var email = User.Identity!.Name!;
+            await service.UpdateAfterFirstLoginAsync<Models.User.User, UpdateProfileAfterFirstLoginDto>(updateProfileDto, email);
 
-        return Ok(mapper.Map<UserInfoAfterFirstLoginDto>(updatedUser));
+            return Ok(StatusCodes.Status200OK);
+        }
+        catch (Exception)
+        {
+            return BadRequest(StatusCodes.Status400BadRequest);
+        }
     }
 
     /// <summary>
@@ -39,9 +43,16 @@ public class ProfileController(IProfileService service, IMapper mapper) : Contro
     [HttpDelete("logout")]
     public IActionResult Logout()
     {
-        HttpContext.Response.Cookies.Delete(".AspNetCore.Identity.Application");
+        try
+        {
+            RemoveIdentityCookies();
 
-        return Ok(StatusCodes.Status200OK);
+            return Ok(StatusCodes.Status200OK);
+        }
+        catch (Exception)
+        {
+            return BadRequest(StatusCodes.Status400BadRequest);
+        }
     }
 
     /// <summary>
@@ -50,11 +61,23 @@ public class ProfileController(IProfileService service, IMapper mapper) : Contro
     [HttpDelete]
     public async Task<IActionResult> Delete()
     {
-        var email = User.Identity!.Name!;
-        var isDeletedUser = await service.DeleteAsync<User>(email);
+        try
+        {
+            var email = User.Identity!.Name!;
+            var isDeletedUser = await service.DeleteAsync<Models.User.User>(email);
 
+            RemoveIdentityCookies();
+
+            return Ok(isDeletedUser);
+        }
+        catch (Exception)
+        {
+            return BadRequest(StatusCodes.Status400BadRequest);
+        }
+    }
+
+    private void RemoveIdentityCookies()
+    {
         HttpContext.Response.Cookies.Delete(".AspNetCore.Identity.Application");
-
-        return Ok(isDeletedUser);
     }
 }

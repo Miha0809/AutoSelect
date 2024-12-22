@@ -1,11 +1,11 @@
-using AutoSelect.API.Models.Client;
-using AutoSelect.API.Models.Expert;
-
-namespace AutoSelect.API.Contexts;
-
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Models;
+
+using AutoSelect.API.Models.Client;
+using AutoSelect.API.Models.Expert;
+using AutoSelect.API.Models.User;
+
+namespace AutoSelect.API.Context;
 
 /// <summary>
 /// Контекст бази данних.
@@ -13,6 +13,7 @@ using Models;
 public class AutoSelectDbContext(DbContextOptions<AutoSelectDbContext> options)
     : IdentityDbContext<User>(options)
 {
+
     /// <inheritdoc />
     public required DbSet<Expert> Experts { get; set; }
 

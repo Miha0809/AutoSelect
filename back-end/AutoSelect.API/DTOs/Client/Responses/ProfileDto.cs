@@ -1,9 +1,9 @@
-namespace AutoSelect.API.Models.DTOs.Responses.Client;
+namespace AutoSelect.API.DTOs.Client.Responses;
 
 /// <summary>
-/// DTO для приватної інформації про клієнта.
+/// DTO для приватної та публічної інформації про клієнта.
 /// </summary>
-public class ClientPrivateShowDto
+public class ProfileDto
 {
     /// <summary>
     /// Електронна пошта користувача.

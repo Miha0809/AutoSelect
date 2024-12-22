@@ -1,13 +1,13 @@
-using AutoSelect.API.Models.Expert;
+using AutoSelect.API.DTOs.Expert.Responses;
 
-namespace AutoSelect.API.Models.DTOs.Responses.Expert;
+namespace AutoSelect.API.DTOs.Expert.Responses;
 
 /// <summary>
-/// DTO для приватної інформації про експерта.
+/// DTO для приватної та публічної інформації про експерта.
 /// </summary>
-public class ExpertPrivateShowDto
+public class ProfileDto
 {
-  /// <summary>
+      /// <summary>
   /// Електронна пошта користувача.
   /// </summary>
   public required string Email { get; set; }
@@ -23,7 +23,7 @@ public class ExpertPrivateShowDto
   public required string LastName { get; set; }
   
   /// <summary>
-  /// TODO: name
+  /// Послуги експерта.
   /// </summary>
-  public ServiceInfoDto? ServiceInfo { get; set; }
+  public IEnumerable<ServiceInfoDto>? ServiceInfo { get; set; }
 }

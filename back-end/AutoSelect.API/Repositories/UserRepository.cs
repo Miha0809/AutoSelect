@@ -1,16 +1,40 @@
-using AutoSelect.API.Contexts;
+using AutoSelect.API.Context;
 using AutoSelect.API.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace AutoSelect.API.Repositories;
 
 /// <summary>
-/// Репозіторій для користувача.
+/// Репозіторій користувача.
 /// </summary>
+/// <param name="context">Контекст БД.</param>
 public class UserRepository(AutoSelectDbContext context) : IUserRepository
 {
     /// <summary>
-    /// Добавлення.
+    /// Всі користувачі.
+    /// </summary>
+    async Task<IEnumerable<TUser>> IUserRepository.GetAllUsers<TUser>()
+    {
+        var users = await context.Set<TUser>().ToListAsync();
+
+        return users;
+    }
+
+    /// <summary>
+    /// Користувач по елекронній пошті.
+    /// </summary>
+    /// <param name="email">Електронна пошта.</param>
+    async Task<TUser?> IUserRepository.GetUserByEmailAsync<TUser>(string email) where TUser : class
+    {
+        var userByEmail = await context.Set<TUser>().FirstOrDefaultAsync(user =>
+            user!.Email!.Equals(email)
+        );
+
+        return userByEmail;
+    }
+
+    /// <summary>
+    /// Створити нового користувача.
     /// </summary>
     /// <param name="user">Користувач.</param>
     void IUserRepository.Add<TUser>(TUser user)
@@ -20,16 +44,7 @@ public class UserRepository(AutoSelectDbContext context) : IUserRepository
     }
 
     /// <summary>
-    /// Оновлення.
-    /// </summary>
-    /// <param name="user">Користувач.</param>
-    void IUserRepository.Update<TUser>(TUser user)
-    {
-        context.Set<TUser>().Update(user);
-    }
-
-    /// <summary>
-    /// Видалення.
+    /// Видалення користувача.
     /// </summary>
     /// <param name="user">Користувач.</param>
     void IUserRepository.Remove<TUser>(TUser user)
@@ -40,8 +55,8 @@ public class UserRepository(AutoSelectDbContext context) : IUserRepository
     /// <summary>
     /// Збереження змін.
     /// </summary>
-    void IUserRepository.Save()
+    async Task IUserRepository.SaveAsync()
     {
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 }

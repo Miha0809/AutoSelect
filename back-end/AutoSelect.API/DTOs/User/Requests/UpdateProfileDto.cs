@@ -1,9 +1,9 @@
-namespace AutoSelect.API.Models.DTOs.Requests;
+namespace AutoSelect.API.DTOs.User.Requests;
 
 /// <summary>
 /// DTO редагування профілю користувача.
 /// </summary>
-public class UpdateProfileAfterFirstLoginDto
+public class UpdateProfileDto
 {
     /// <summary>
     /// Ім'я.
@@ -16,10 +16,4 @@ public class UpdateProfileAfterFirstLoginDto
     /// </summary>
     /// <example>Full</example>
     public required string LastName { get; set; }
-
-    /// <summary>
-    /// Чи є користувач експертом.
-    /// </summary>
-    /// <example>false</example>
-    public bool IsExpert { get; set; }
 }

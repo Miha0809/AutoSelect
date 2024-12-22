@@ -1,6 +1,6 @@
 using System.Reflection;
-using AutoSelect.API.Contexts;
-using AutoSelect.API.Models;
+using AutoSelect.API.Context;
+using AutoSelect.API.Models.User;
 using AutoSelect.API.Models.Enums;
 using AutoSelect.API.Profiles;
 using AutoSelect.API.Repositories;
@@ -46,14 +46,11 @@ builder.Services.AddSwaggerGen(options =>
 
     options.IncludeXmlComments(xmlPath);
 });
-builder.Services.AddControllers();
-
 string connectionString = builder.Configuration.GetConnectionString("Host")!;
 builder.Services.AddDbContext<AutoSelectDbContext>(options =>
 {
     options.UseLazyLoadingProxies().UseNpgsql(connectionString);
 });
-builder.Services.AddAuthorization();
 builder
     .Services.AddIdentityApiEndpoints<User>(options =>
     {
@@ -63,14 +60,17 @@ builder
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AutoSelectDbContext>();
 
+builder.Services.AddControllers();
+builder.Services.AddAuthorization();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 // DI for repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUserSearchRepository, UserSearchRepository>();
+builder.Services.AddScoped<IServiceInfoRepository, ServiceInfoRepository>();
 
 // DI for services
 builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<IServiceInfoService, ServiceInfoService>();
 
 // Health Checks
 builder
@@ -114,15 +114,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.UseEndpoints(endpoints =>
-{
-    endpoints?.MapControllers();
-});
 
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var roles = new[] { nameof(Roles.Client), nameof(Roles.Expert) };
+    var roles = Enum.GetNames<Roles>();
 
     foreach (var role in roles)
     {

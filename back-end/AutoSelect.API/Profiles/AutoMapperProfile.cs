@@ -1,9 +1,9 @@
 using AutoMapper;
-using AutoSelect.API.Models;
-using AutoSelect.API.Models.DTOs.Requests;
-using AutoSelect.API.Models.DTOs.Responses;
-using AutoSelect.API.Models.DTOs.Responses.Client;
-using AutoSelect.API.Models.DTOs.Responses.Expert;
+using AutoSelect.API.Models.User;
+using AutoSelect.API.DTOs.User.Requests;
+using AutoSelect.API.Models.Expert;
+using AutoSelect.API.DTOs.Expert.Responses;
+using AutoSelect.API.Models.Client;
 
 namespace AutoSelect.API.Profiles;
 
@@ -19,15 +19,13 @@ public class AutoMapperProfile : Profile
     {
         // All users
         CreateMap<User, UpdateProfileAfterFirstLoginDto>().ReverseMap();
-        CreateMap<User, UserInfoAfterFirstLoginDto>();
 
         // Expert
-        CreateMap<User, ExpertPublicShowDto>();
-        CreateMap<User, ExpertPrivateShowDto>();
-        CreateMap<User, ServiceInfoDto>();
+        CreateMap<Expert, DTOs.Expert.Responses.ProfileDto>();
+        CreateMap<ServiceInfo, ServiceInfoDto>().ReverseMap();
 
         // Client
-        CreateMap<User, ClientPublicShowDto>();
-        CreateMap<User, ClientPrivateShowDto>();
+        CreateMap<Client, DTOs.Client.Responses.ProfileDto>();
+        CreateMap<Client, DTOs.Client.Responses.ProfileDto>();
     }
 }

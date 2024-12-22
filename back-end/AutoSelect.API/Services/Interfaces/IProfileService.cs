@@ -1,5 +1,5 @@
-using AutoSelect.API.Models;
-using AutoSelect.API.Models.DTOs.Requests;
+using AutoSelect.API.Models.User;
+using AutoSelect.API.DTOs.User.Requests;
 
 namespace AutoSelect.API.Services.Interfaces;
 
@@ -9,27 +9,26 @@ namespace AutoSelect.API.Services.Interfaces;
 public interface IProfileService
 {
     /// <summary>
-    /// Профіль користувача.
+    /// Всі користувачі.
     /// </summary>
-    /// <param name="email">Електронна пошта користувача.</param>
-    Task<TUser> ProfileAsync<TUser>(string email) where TUser : User;
+  	Task<IEnumerable<TUser>> GetAllProfilesAsync<TUser>() where TUser : User;
 
     /// <summary>
-    /// Оновлення даних користувача.
+    /// Профіль певного користувача.
     /// </summary>
-    /// <param name="userUpdate">Користувач з оновленими даними.</param>
-    /// <param name="email">Електрона пошта авторизованого користувача.</param>
-    Task<TUser> UpdateAsync<TUser>(TUser userUpdate, string email) where TUser : User;
-    
+    /// <param name="email">Електронна пошта користувача.</param>
+    Task<TUser> GetProfileAsync<TUser>(string email) where TUser : User;
+
     /// <summary>
     /// Редагування профілю користувача.
     /// </summary>
     /// <param name="updateProfileDto">Оновленні дані.</param>
     /// <param name="email">Електронна пошта користувача.</param>
-    Task<TUser> UpdateAfterFirstLoginAsync<TUser>(
-        UpdateProfileAfterFirstLoginDto updateProfileDto,
+    Task UpdateAfterFirstLoginAsync<TUser, TUpdate>(
+        TUpdate updateProfileDto,
         string email
-    ) where TUser : User;
+    ) where TUser : User
+      where TUpdate : UpdateProfileDto;
 
     /// <summary>
     /// Видалити профіль.
