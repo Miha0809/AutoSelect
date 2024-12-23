@@ -10,11 +10,11 @@ namespace AutoSelect.API.Controllers.Expert;
 /// <summary>
 /// Контроллер профілю експерта.
 /// </summary>
-/// <param name="profileService">Сервіс профілю користувача.</param>
+/// <param name="userService">Сервіс профілю користувача.</param>
 /// <param name="mapper">Маппер об'єктів.</param>
 [ApiController]
 [Route("api/[controller]")]
-public class ProfileExpertController(IProfileService profileService, IMapper mapper) : ControllerBase
+public class ProfileExpertController(IUserService userService, IMapper mapper) : ControllerBase
 {
     /// <summary>
     /// Профіль експерта.
@@ -26,7 +26,7 @@ public class ProfileExpertController(IProfileService profileService, IMapper map
         try
         {
             var email = User.Identity!.Name!;
-            var user = await profileService.GetProfileAsync<Models.Expert.Expert>(email);
+            var user = await userService.GetUserAsync<Models.Expert.Expert>(email);
 
             return Ok(mapper.Map<ProfileDto>(user));
         }
@@ -44,7 +44,7 @@ public class ProfileExpertController(IProfileService profileService, IMapper map
     {
         try
         {
-            var experts = await profileService.GetAllProfilesAsync<Models.Expert.Expert>();
+            var experts = await userService.GetAllUsersAsync<Models.Expert.Expert>();
 
             return Ok(mapper.Map<IEnumerable<Models.Expert.Expert>, List<ProfileDto>>(experts));
         }
@@ -63,7 +63,7 @@ public class ProfileExpertController(IProfileService profileService, IMapper map
     {
         try
         {
-            var expert = await profileService.GetProfileAsync<Models.Expert.Expert>(email);
+            var expert = await userService.GetUserAsync<Models.Expert.Expert>(email);
 
             return Ok(new
             {

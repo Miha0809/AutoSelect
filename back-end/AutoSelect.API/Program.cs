@@ -69,7 +69,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IServiceInfoRepository, ServiceInfoRepository>();
 
 // DI for services
-builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IServiceInfoService, ServiceInfoService>();
 
 // Health Checks

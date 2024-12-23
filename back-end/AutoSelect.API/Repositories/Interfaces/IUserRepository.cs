@@ -10,7 +10,7 @@ public interface IUserRepository
     /// <summary>
     /// Всі користувачі.
     /// </summary>
-    Task<IEnumerable<TUser>> GetAllUsers<TUser>() where TUser : User;
+    Task<IEnumerable<TUser>> GetAllUsersAsync<TUser>() where TUser : User;
 
     /// <summary>
     /// Користувач по елекронній пошті.

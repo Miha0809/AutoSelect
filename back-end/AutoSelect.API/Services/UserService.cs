@@ -16,18 +16,18 @@ namespace AutoSelect.API.Services;
 /// <param name="userRepository">Репозіторі користувача.</param>
 /// <param name="userManager">Менеджер Identity користувача.</param>
 /// <param name="mapper">Маппер об'єктів</param>
-public class ProfileService(
+public class UserService(
     IUserRepository userRepository,
     UserManager<User> userManager,
     IMapper mapper
-) : IProfileService
+) : IUserService
 {
     /// <summary>
     /// Всі користувачі.
     /// </summary>
-    async Task<IEnumerable<TUser>> IProfileService.GetAllProfilesAsync<TUser>()
+    async Task<IEnumerable<TUser>> IUserService.GetAllUsersAsync<TUser>()
     {
-        var users = await userRepository.GetAllUsers<TUser>();
+        var users = await userRepository.GetAllUsersAsync<TUser>();
 
         return users;
     }
@@ -36,7 +36,7 @@ public class ProfileService(
     /// Профіль користувача.
     /// </summary>
     /// <param name="email">Електронна пошта користувача.</param>
-    async Task<TUser> IProfileService.GetProfileAsync<TUser>(string email)
+    async Task<TUser> IUserService.GetUserAsync<TUser>(string email)
     {
         var user = await userRepository.GetUserByEmailAsync<TUser>(email);
         return user!;
@@ -46,7 +46,7 @@ public class ProfileService(
     /// Видалити профіль.
     /// </summary>
     /// <param name="email">Електронна пошта користувача.</param>
-    async Task<bool> IProfileService.DeleteAsync<TUser>(string email)
+    async Task<bool> IUserService.DeleteAsync<TUser>(string email)
     {
         var user = await userRepository.GetUserByEmailAsync<TUser>(email);
 
@@ -58,9 +58,9 @@ public class ProfileService(
         userRepository.Remove(user);
         await userRepository.SaveAsync();
 
-        var isExistsUser = await userRepository.GetUserByEmailAsync<TUser>(email) is null;
+        var isDeletedUser = await userRepository.GetUserByEmailAsync<TUser>(email) is null;
 
-        return isExistsUser;
+        return isDeletedUser;
     }
 
     /// <summary>
@@ -68,19 +68,24 @@ public class ProfileService(
     /// </summary>
     /// <param name="updateProfileDto">Оновленні дані.</param>
     /// <param name="email">Електронна пошта користувача.</param>
-    async Task IProfileService.UpdateAfterFirstLoginAsync<TUser, TUpdate>(
+    async Task IUserService.UpdateAsync<TUser, TUpdate>(
         TUpdate updateProfileDto,
         string email
     )
     {
         var user = await userRepository.GetUserByEmailAsync<TUser>(email);
 
+        if (user is null)
+        {
+            throw new ArgumentNullException("user not found");
+        }
+
         mapper.Map(updateProfileDto, user);
         await userManager.UpdateAsync(user!);
 
         var userRoles = await userManager.GetRolesAsync(user!);
 
-        if (userRoles.Count == 0)
+        if (userRoles is not null && userRoles.Count == 0)
         {
             if (updateProfileDto is UpdateProfileAfterFirstLoginDto update && update.IsExpert)
             {
