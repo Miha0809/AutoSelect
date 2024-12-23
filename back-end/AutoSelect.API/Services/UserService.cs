@@ -75,6 +75,11 @@ public class UserService(
     {
         var user = await userRepository.GetUserByEmailAsync<TUser>(email);
 
+        if (user is null)
+        {
+            throw new ArgumentNullException("user not found");
+        }
+
         mapper.Map(updateProfileDto, user);
         await userManager.UpdateAsync(user!);
 
