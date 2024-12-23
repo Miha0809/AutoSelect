@@ -36,7 +36,7 @@ public class UserService(
     /// Профіль користувача.
     /// </summary>
     /// <param name="email">Електронна пошта користувача.</param>
-    async Task<TUser> IUserService.GetProfileAsync<TUser>(string email)
+    async Task<TUser> IUserService.GetUserAsync<TUser>(string email)
     {
         var user = await userRepository.GetUserByEmailAsync<TUser>(email);
         return user!;

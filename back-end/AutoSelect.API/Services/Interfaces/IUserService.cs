@@ -17,7 +17,7 @@ public interface IUserService
 	/// Профіль певного користувача.
 	/// </summary>
 	/// <param name="email">Електронна пошта користувача.</param>
-	Task<TUser> GetProfileAsync<TUser>(string email) where TUser : User;
+	Task<TUser> GetUserAsync<TUser>(string email) where TUser : User;
 
 	/// <summary>
 	/// Редагування профілю користувача.

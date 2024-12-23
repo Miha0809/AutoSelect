@@ -26,7 +26,7 @@ public class ProfileClientController(IUserService userService, IMapper mapper) :
         try
         {
             var email = User.Identity!.Name!;
-            var user = await userService.GetProfileAsync<Models.Client.Client>(email);
+            var user = await userService.GetUserAsync<Models.Client.Client>(email);
 
             return Ok(mapper.Map<ProfileDto>(user));
         }

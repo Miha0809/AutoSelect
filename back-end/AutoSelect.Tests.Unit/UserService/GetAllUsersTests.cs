@@ -1,11 +1,10 @@
 using AutoMapper;
 using AutoSelect.API.Repositories.Interfaces;
-using AutoSelect.API.Services;
 using AutoSelect.API.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Moq;
 
-namespace AutoSelect.Tests.Unit.User;
+namespace AutoSelect.Tests.Unit.UserService;
 
 public class GetAllUsersTests
 {
@@ -19,7 +18,7 @@ public class GetAllUsersTests
         _userRepositoryMock = new Mock<IUserRepository>();
         _userManagerMock = new Mock<UserManager<API.Models.User.User>>(Mock.Of<IUserStore<API.Models.User.User>>(), null, null, null, null, null, null, null, null);
         _mapperMock = new Mock<IMapper>();
-        _userService = new UserService(_userRepositoryMock.Object, _userManagerMock.Object, _mapperMock.Object);
+        _userService = new API.Services.UserService(_userRepositoryMock.Object, _userManagerMock.Object, _mapperMock.Object);
     }
 
     [Fact]

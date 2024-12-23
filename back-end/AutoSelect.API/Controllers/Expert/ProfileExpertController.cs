@@ -26,7 +26,7 @@ public class ProfileExpertController(IUserService userService, IMapper mapper) :
         try
         {
             var email = User.Identity!.Name!;
-            var user = await userService.GetProfileAsync<Models.Expert.Expert>(email);
+            var user = await userService.GetUserAsync<Models.Expert.Expert>(email);
 
             return Ok(mapper.Map<ProfileDto>(user));
         }
@@ -63,7 +63,7 @@ public class ProfileExpertController(IUserService userService, IMapper mapper) :
     {
         try
         {
-            var expert = await userService.GetProfileAsync<Models.Expert.Expert>(email);
+            var expert = await userService.GetUserAsync<Models.Expert.Expert>(email);
 
             return Ok(new
             {
