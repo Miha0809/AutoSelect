@@ -10,15 +10,9 @@ namespace AutoSelect.API.Services.Interfaces;
 public interface IServiceInfoService
 {
     /// <summary>
-    /// Конкретний послуга по ідентифікатору.
-    /// </summary>
-    /// <param name="id">Ідентифікатор послуги.</param>
-    Task<ServiceInfo?> ServiceInfoByIdAsync(int id);
-
-    /// <summary>
     /// Всі послуги конкретного експерта.
     /// </summary>
-    Task<IEnumerable<ServiceInfo>> GetAllServiceInfosAsync(string email);
+    Task<IEnumerable<ServiceInfo>?> GetOwnerServicesAsync(string email);
 
     /// <summary>
     /// Добавити нову послугу.

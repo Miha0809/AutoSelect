@@ -27,7 +27,7 @@ public class UpdateTests
     }
 
     [Fact]
-    public async Task UpdateAsync_Should_UpdateFirstNameAndLastName()
+    public async Task UpdateAsync_ValidInput_ShouldUpdateFirstNameAndLastName()
     {
         // Arrange
         const string email = "test@gmail.com";
@@ -71,7 +71,7 @@ public class UpdateTests
     }
 
     [Fact]
-    public async Task UpdateAsync_ShouldUpdateUser_WhenUserHasRole()
+    public async Task UpdateAsync_UserHasRole_ShouldUpdateUser()
     {
         // Arrange
         var email = "test@example.com";
@@ -91,7 +91,7 @@ public class UpdateTests
     }
 
     [Fact]
-    public async Task UpdateAsync_ShouldAddExpertRole_WhenUserIsExpertAndHasNoRole()
+    public async Task UpdateAsync_UserIsExpertAndHasNoRole_ShouldAddExpertRole()
     {
         // Arrange
         var email = "expert@example.com";
@@ -110,7 +110,7 @@ public class UpdateTests
     }
 
     [Fact]
-    public async Task UpdateAsync_ShouldAddClientRole_WhenUserIsNotExpertAndHasNoRole()
+    public async Task UpdateAsync_UserIsNotExpertAndHasNoRole_ShouldAddClientRole()
     {
         // Arrange
         var email = "client@example.com";
@@ -129,7 +129,7 @@ public class UpdateTests
     }
 
     [Fact]
-    public async Task UpdateAsync_ShouldThrowException_WhenUserNotFound()
+    public async Task UpdateAsync_UserNotFound_ShouldThrowException()
     {
         // Arrange
         var email = "notfound@example.com";

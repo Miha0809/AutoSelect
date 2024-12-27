@@ -9,28 +9,18 @@ namespace AutoSelect.API.Services;
 /// <summary>
 /// Сервіс послуг експерта.
 /// </summary>
-/// <param name="serviceInfoRepository">TODO: name</param>
-/// <param name="userRepository">TODO: name</param>
-/// <param name="mapper">TODO: name</param>
+/// <param name="serviceInfoRepository">Репозіторі послуг експерта.</param>
+/// <param name="userRepository">Репозіторі користувача.</param>
+/// <param name="mapper">Маппер об'єктів.</param>
 public class ServiceInfoService(IServiceInfoRepository serviceInfoRepository, IUserRepository userRepository, IMapper mapper) : IServiceInfoService
 {
     /// <summary>
-    /// Конкретний послуга по ідентифікатору.
-    /// </summary>
-    /// <param name="id">Ідентифікатор послуги.</param>
-    async Task<ServiceInfo?> IServiceInfoService.ServiceInfoByIdAsync(int id)
-    {
-        var service = await serviceInfoRepository.GetServiceInfoByIdAsync(id);
-
-        return service;
-    }
-
-    /// <summary>
     /// Всі послуги конкретного експерта.
     /// </summary>
-    async Task<IEnumerable<ServiceInfo>> IServiceInfoService.GetAllServiceInfosAsync(string email)
+    /// <param name="email">Електрона пошта власника послуги.</param>
+    async Task<IEnumerable<ServiceInfo>?> IServiceInfoService.GetOwnerServicesAsync(string email)
     {
-        var services = await serviceInfoRepository.GetAllServiceInfosAsync(email);
+        var services = await serviceInfoRepository.GetOwnerServicesAsync(email);
 
         return services;
     }
@@ -39,10 +29,16 @@ public class ServiceInfoService(IServiceInfoRepository serviceInfoRepository, IU
     /// Добавити нову послугу.
     /// </summary>
     /// <param name="serviceInfo">Послуга.</param>
-    /// <param name="email">Електрона пошта власника послугию.</param>
+    /// <param name="email">Електрона пошта власника послуги.</param>
     async Task<ServiceInfo> IServiceInfoService.AddAsync<TUser>(ServiceInfo serviceInfo, string email)
     {
         var owner = await userRepository.GetUserByEmailAsync<TUser>(email);
+
+        if (owner is null)
+        {
+            throw new ArgumentNullException("Owner is null");
+        }
+
         var service = new ServiceInfo(serviceInfo)
         {
             Name = serviceInfo.Name,
@@ -63,15 +59,15 @@ public class ServiceInfoService(IServiceInfoRepository serviceInfoRepository, IU
     {
         var service = await serviceInfoRepository.GetServiceInfoByIdAsync(serviceInfoUpdateDto.Id);
 
-        if (service is not null)
+        if (service is null)
         {
-            mapper.Map(serviceInfoUpdateDto, service);
-            await serviceInfoRepository.SaveAsync();
-
-            return (await serviceInfoRepository.GetServiceInfoByIdAsync(serviceInfoUpdateDto.Id))!;
+            throw new ArgumentException("service is null");
         }
 
-        throw new ArgumentException();
+        mapper.Map(serviceInfoUpdateDto, service);
+        await serviceInfoRepository.SaveAsync();
+
+        return (await serviceInfoRepository.GetServiceInfoByIdAsync(serviceInfoUpdateDto.Id))!;
     }
 
     /// <summary>
@@ -82,14 +78,14 @@ public class ServiceInfoService(IServiceInfoRepository serviceInfoRepository, IU
     {
         var service = await serviceInfoRepository.GetServiceInfoByIdAsync(id);
 
-        if (service is not null)
+        if (service is null)
         {
-            serviceInfoRepository.Delete(service);
-            await serviceInfoRepository.SaveAsync();
-
-            return true;
+            return false;
         }
 
-        return false;
+        serviceInfoRepository.Delete(service);
+        await serviceInfoRepository.SaveAsync();
+
+        return true;
     }
 }

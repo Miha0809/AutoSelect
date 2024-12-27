@@ -23,7 +23,7 @@ public class DeleteTests
     }
 
     [Fact]
-    public async Task DeleteAsync_Should_ReturnDeletedUser()
+    public async Task DeleteAsync_ValidInput_ShouldReturnDeletedUser()
     {
         // Arrange
         const string email = "test@gmail.com";
@@ -45,7 +45,7 @@ public class DeleteTests
     }
 
     [Fact]
-    public async Task DeleteAsync_ShouldCheckCallRepository()
+    public async Task DeleteAsync_ShouldCallRepository()
     {
         // Arrage
         const string email = "test@gmail.com";
@@ -62,7 +62,7 @@ public class DeleteTests
     }
 
     [Fact]
-    public async Task DeleteAsync_ShouldThrowArgumentNullException_WhenUserNotExist()
+    public async Task DeleteAsync_UserNotExist_ShouldThrowArgumentNullException()
     {
         // Arrage
         const string email = "test@gmail.com";
@@ -73,7 +73,7 @@ public class DeleteTests
     }
 
     [Fact]
-    public async Task DeleteAsync_ShouldReturnFalse_WhenUserIsNotDeleted()
+    public async Task DeleteAsync_UserNotDeleted_ShouldReturnFalse()
     {
         // Arrage
         const string email = "test@gmail.com";
@@ -94,7 +94,7 @@ public class DeleteTests
     }
 
     [Fact]
-    public async Task DeleteAsync_ShouldThrowException_WhenRepositoryFails()
+    public async Task DeleteAsync_RepositoryFails_ShouldThrowException()
     {
         // Arrange
         const string email = "test@gmail.com";

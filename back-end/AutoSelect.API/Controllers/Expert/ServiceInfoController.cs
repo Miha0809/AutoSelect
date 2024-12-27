@@ -27,9 +27,9 @@ public class ServiceInfoController(IServiceInfoService serviceInfoService, IMapp
         try
         {
             var email = User.Identity!.Name!;
-            var services = await serviceInfoService.GetAllServiceInfosAsync(email);
+            var services = await serviceInfoService.GetOwnerServicesAsync(email);
 
-            return Ok(mapper.Map<IEnumerable<ServiceInfo>, List<ServiceInfoDto>>(services));
+            return Ok(mapper.Map<IEnumerable<ServiceInfo>?, List<ServiceInfoDto>>(services));
         }
         catch (Exception)
         {

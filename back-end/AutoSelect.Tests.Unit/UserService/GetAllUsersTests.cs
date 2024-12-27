@@ -22,7 +22,7 @@ public class GetAllUsersTests
     }
 
     [Fact]
-    public async Task GetAllUsersAsync_Should_ReturnAllUsers()
+    public async Task GetAllUsersAsync_ValidInput_ShouldReturnAllUsers()
     {
         // Arrange
         var users = new List<API.Models.User.User>()
@@ -52,7 +52,7 @@ public class GetAllUsersTests
     }
 
     [Fact]
-    public async Task GetAllUsersAsync_Should_ReturnEmptyList_WhenNoUsersExist()
+    public async Task GetAllUsersAsync_NoUsersExist_ShouldReturnEmptyList()
     {
         // Arrange
         _userRepositoryMock.Setup(repo => repo.GetAllUsersAsync<API.Models.User.User>()).ReturnsAsync(new List<API.Models.User.User>());
@@ -66,7 +66,7 @@ public class GetAllUsersTests
     }
 
     [Fact]
-    public async Task GetAllUsersAsync_Should_ReturnCorrectTypes()
+    public async Task GetAllUsersAsync_ValidInput_ShouldReturnCorrectTypes()
     {
         // Arrange
         var users = new List<API.Models.User.User> { new(), new() };
@@ -83,7 +83,7 @@ public class GetAllUsersTests
     }
 
     [Fact]
-    public async Task GetAllProfilesAsync_ShouldCallRepositoryOnce()
+    public async Task GetAllUsersAsync_ShouldCallRepositoryOnce()
     {
         // Arrange
         _userRepositoryMock.Setup(repo => repo.GetAllUsersAsync<API.Models.User.User>()).ReturnsAsync(new List<API.Models.User.User>());
@@ -96,7 +96,7 @@ public class GetAllUsersTests
     }
 
     [Fact]
-    public async Task GetAllProfilesAsync_ShouldThrowException_WhenRepositoryThrows()
+    public async Task GetAllUsersAsync_RepositoryThrows_ShouldThrowException()
     {
         // Arrange
         _userRepositoryMock.Setup(repo => repo.GetAllUsersAsync<API.Models.User.User>()).ThrowsAsync(new Exception());
