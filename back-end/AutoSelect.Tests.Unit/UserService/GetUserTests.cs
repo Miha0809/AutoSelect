@@ -24,7 +24,7 @@ public class GetUserTests
     }
 
     [Fact]
-    public async Task GetUserAsync_Should_ReturnSingleUser()
+    public async Task GetUserAsync_ValidInput_ShouldReturnSingleUser()
     {
         // Arrange
         const string email = "test@gmail.com";
@@ -44,7 +44,7 @@ public class GetUserTests
     }
 
     [Fact]
-    public async Task GetUserAsync_Should_ReturnNullWhenUserNotExist()
+    public async Task GetUserAsync_UserNotExist_ShouldReturnNull()
     {
         // Arrange
         const string email = "test@gmail.com";
@@ -58,7 +58,7 @@ public class GetUserTests
     }
 
     [Fact]
-    public async Task GetUserAsync_Should_ReturnThrowException_WhenRepositoryThrow()
+    public async Task GetUserAsync_RepositoryThrows_ShouldThrowException()
     {
         // Arrange
         const string email = "test@gmail.com";
@@ -84,7 +84,7 @@ public class GetUserTests
     }
 
     [Fact]
-    public async Task GetUserAsync_Should_ReturnCorrectType()
+    public async Task GetUserAsync_ValidInput_ShouldReturnCorrectType()
     {
         // Arrange
         const string email = "test@gmail.com";

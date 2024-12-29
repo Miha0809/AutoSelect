@@ -11,7 +11,7 @@ public interface IServiceInfoRepository
     /// Отримати всі послуги конкретного експерта.
     /// </summary>
     /// <param name="email">Електрона пошта експерта.</param>
-    Task<IEnumerable<ServiceInfo>> GetAllServiceInfosAsync(string email);
+    Task<IEnumerable<ServiceInfo>?> GetOwnerServicesAsync(string email);
 
     /// <summary>
     /// Отримати послугу по ідентифікатору.

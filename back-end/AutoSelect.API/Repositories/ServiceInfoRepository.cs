@@ -15,9 +15,10 @@ public class ServiceInfoRepository(AutoSelectDbContext context) : IServiceInfoRe
     /// Отримати всі послуги конкретного експерта.
     /// </summary>
     /// <param name="email">Електрона пошта експерта.</param>
-    async Task<IEnumerable<ServiceInfo>> IServiceInfoRepository.GetAllServiceInfosAsync(string email)
+    async Task<IEnumerable<ServiceInfo>?> IServiceInfoRepository.GetOwnerServicesAsync(string email)
     {
-        var services = await context.ServiceInfos.Where(service => service.Owner.Email!.Equals(email)).ToListAsync();
+        var services = await context.ServiceInfos.Where(service => service.Owner != null
+        || service.Owner!.Email!.Equals(email)).ToListAsync();
 
         return services;
     }
