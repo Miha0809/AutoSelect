@@ -74,7 +74,7 @@ builder.Services.AddScoped<IServiceInfoService, ServiceInfoService>();
 
 // Health Checks
 builder
-    .Services.AddHealthChecks()
+    .Services.AddHealthChecks() // appsettings.json
     .AddNpgSql(
         connectionString: connectionString,
         healthQuery: "SELECT 1",
