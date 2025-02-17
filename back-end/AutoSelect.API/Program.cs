@@ -7,11 +7,8 @@ using AutoSelect.API.Repositories;
 using AutoSelect.API.Repositories.Interfaces;
 using AutoSelect.API.Services;
 using AutoSelect.API.Services.Interfaces;
-using HealthChecks.UI.Client;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 
@@ -73,15 +70,15 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IServiceInfoService, ServiceInfoService>();
 
 // Health Checks
-builder
-    .Services.AddHealthChecks() // appsettings.json
-    .AddNpgSql(
-        connectionString: connectionString,
-        healthQuery: "SELECT 1",
-        name: "NpgSql Check",
-        failureStatus: HealthStatus.Unhealthy,
-        tags: new[] { "sql" }
-    );
+// builder
+//     .Services.AddHealthChecks() // appsettings.json
+//     .AddNpgSql(
+//         connectionString: connectionString,
+//         healthQuery: "SELECT 1",
+//         name: "NpgSql Check",
+//         failureStatus: HealthStatus.Unhealthy,
+//         tags: new[] { "sql" }
+//     );
 
 builder.Services.AddHealthChecksUI().AddInMemoryStorage();
 
@@ -96,15 +93,26 @@ if (app.Environment.IsDevelopment())
 
 app.MapIdentityApi<User>();
 
-app.MapHealthChecks(
-    "/health",
-    new HealthCheckOptions
-    {
-        Predicate = _ => true,
-        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
-    }
-);
-app.MapHealthChecksUI();
+// app.MapHealthChecks(
+//     "/health",
+//     new HealthCheckOptions
+//     {
+//         Predicate = _ => true,
+//         ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+//     }
+// );
+// app.MapHealthChecksUI();
+
+//   "HealthChecksUI": {
+//     "HealthChecks": [
+//       {
+//         "Name": "AutoSelect",
+//         "Uri": "http://localhost:5154/health"
+//       }
+//     ],
+//     "EvaluationTimeinSeconds": 2,
+//     "MinimumSecondsBetweenFailureNotifications": 60
+//   }
 
 app.UseHttpsRedirection();
 
